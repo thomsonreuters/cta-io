@@ -3,7 +3,7 @@
 const Sqr = require('../lib/index.js');
 const main = [{
   method: 'produce'
-},{
+}, {
   method: 'consume'
 }, {
   method: 'publish'
@@ -11,16 +11,16 @@ const main = [{
   method: 'subscribe'
 }];
 
-module.exports = function(){
+module.exports = function () {
 
-  main.forEach(function(e){
+  main.forEach(function (e) {
     it(e.method, function (done) {
       let sqr = new Sqr(this.provider);
       sqr[e.method](this.id)
-        .then(function(data){
-          console.log(data,'\n');
+        .then(function (data) {
+          console.log(data, '\n');
           done();
-        }, function(err){
+        }, function (err) {
           done(err);
         });
     });
