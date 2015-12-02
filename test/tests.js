@@ -1,29 +1,29 @@
-"use strict";
+'use strict';
 
 const Sqr = require('../lib/index.js');
 const main = [{
-  method: 'produce'
+  method: 'produce',
 }, {
-  method: 'consume'
+  method: 'consume',
 }, {
-  method: 'publish'
+  method: 'publish',
 }, {
-  method: 'subscribe'
+  method: 'subscribe',
 }];
 
-module.exports = function () {
-
-  main.forEach(function (e) {
-    it(e.method, function (done) {
-      let sqr = new Sqr(this.provider);
+function Tests() {
+  main.forEach(function mainFct(e) {
+    it(e.method, function itFct(done) {
+      const sqr = new Sqr(this.provider);
       sqr[e.method](this.id)
-        .then(function (data) {
+        .then(function thenFct(data) {
           console.log(data, '\n');
           done();
-        }, function (err) {
+        }, function errFct(err) {
           done(err);
         });
     });
   });
+}
 
-};
+module.exports = Tests;
