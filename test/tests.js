@@ -1,25 +1,57 @@
 'use strict';
 
-const Sqr = require('../lib/index.js');
+const SqrLib = require('../lib/index.js');
+const common = require('../lib/common.js');
+const q = require('q');
 const main = [{
-  method: 'produce',
-}, {
-  method: 'consume',
-}, {
   method: 'publish',
 }, {
   method: 'subscribe',
 }];
 
 function Tests() {
-  main.forEach(function mainFct(e) {
-    it(e.method, function itFct(done) {
-      const sqr = new Sqr(this.provider);
+  it('produce', function(done) {
+    const sqr = new SqrLib(this.provider);
+    sqr.produce({
+      queue: 'test',
+      json: {
+        wait: 3,
+      },
+    }).then(function() {
+        done();
+      }, function(err) {
+        done(err);
+      });
+  });
+  it('consume', function(done) {
+    this.timeout(10000);
+    const sqr = new SqrLib(this.provider);
+    function fct(msg) {
+      const deferred = q.defer();
+      const json = common.bufferToJSON(msg.content);
+      console.log('\n[x] Received', json);
+      setTimeout(function() {
+        console.log('\n[x] Done');
+        deferred.resolve();
+      }, json.wait * 1000);
+      return deferred.promise;
+    }
+    sqr.consume({queue: 'test', fct: fct})
+      .then(function(data) {
+        console.log(data);
+        done();
+      }, function(err) {
+        done(err);
+      });
+  });
+  main.forEach(function(e) {
+    it(e.method, function(done) {
+      const sqr = new SqrLib(this.provider);
       sqr[e.method](this.id)
-        .then(function thenFct(data) {
+        .then(function(data) {
           console.log(data, '\n');
           done();
-        }, function errFct(err) {
+        }, function(err) {
           done(err);
         });
     });
