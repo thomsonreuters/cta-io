@@ -2,9 +2,10 @@
 
 const SqrLib = require('../lib/index.js');
 const common = require('../lib/common.js');
+const assert = require('chai').assert;
 const q = require('q');
 
-function Tests() {
+function Tests(){
 
   it('produce', function(done) {
     const sqr = new SqrLib(this.provider);
@@ -34,7 +35,7 @@ function Tests() {
       return deferred.promise;
     }
     sqr.consume({queue: 'test', cb: cb})
-      .then(function(data) {
+      .then(function() {
         done();
       }, function(err) {
         done(err);
