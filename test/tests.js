@@ -4,8 +4,9 @@ const SqrLib = require('../lib/index.js');
 const common = require('../lib/common.js');
 const assert = require('chai').assert;
 const q = require('q');
+const global = {};
 
-function Tests(){
+function Tests() {
 
   it('produce', function(done) {
     const sqr = new SqrLib(this.provider);
@@ -46,7 +47,8 @@ function Tests(){
     this.timeout(10000);
     const sqr = new SqrLib(this.provider);
     function cb(msg) {
-      console.log('\nreceived subscribed msg: ', common.bufferToJSON(msg.content));
+      global.published = common.bufferToJSON(msg.content);
+      console.log('\nreceived subscribed msg: ', global.published);
     }
     sqr.subscribe({
       ex: 'test_ex',
@@ -71,7 +73,10 @@ function Tests(){
       key: 'test_key',
       json: json,
     }).then(function() {
+      setTimeout(function() {
+        assert.deepEqual(json, global.published);
         done();
+      }, 1000);
     }, function(err) {
       done(err);
     });
