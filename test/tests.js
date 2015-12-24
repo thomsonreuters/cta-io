@@ -13,7 +13,7 @@ function Tests() {
     sqr.produce({
       queue: 'test',
       json: {
-        wait: 3,
+        wait: 1,
       },
     }).then(function() {
         done();
@@ -25,9 +25,8 @@ function Tests() {
   it('consume', function(done) {
     this.timeout(10000);
     const sqr = new SqrLib(this.provider);
-    function cb(msg) {
+    function cb(json) {
       const deferred = q.defer();
-      const json = common.bufferToJSON(msg.content);
       console.log('\n[x] Received', json);
       setTimeout(function() {
         console.log('\n[x] Done');
@@ -46,9 +45,9 @@ function Tests() {
   it('subscribe', function(done) {
     this.timeout(10000);
     const sqr = new SqrLib(this.provider);
-    function cb(msg) {
-      global.published = common.bufferToJSON(msg.content);
-      console.log('\nreceived subscribed msg: ', global.published);
+    function cb(json) {
+      global.published = json;
+      console.log('\nreceived subscribed msg: ', json);
     }
     sqr.subscribe({
       ex: 'test_ex',
