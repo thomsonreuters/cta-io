@@ -1,7 +1,6 @@
 'use strict';
 
 const SqrLib = require('../lib/index.js');
-const common = require('../lib/common.js');
 const assert = require('chai').assert;
 const q = require('q');
 const global = {};

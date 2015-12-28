@@ -5,7 +5,7 @@ const tests = require('./tests.js');
 const main = [{
   provider: 'rabbitMQProvider',
   params: {
-    uri: 'amqp://localhost',
+    url: 'amqp://localhost',
   },
 }, {
   provider: 'wampKueProvider',
