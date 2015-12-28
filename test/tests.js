@@ -6,7 +6,6 @@ const q = require('q');
 const global = {};
 
 function Tests() {
-
   it('produce', function(done) {
     const sqr = new SqrLib(this.provider);
     sqr.produce({
@@ -15,10 +14,10 @@ function Tests() {
         wait: 1,
       },
     }).then(function() {
-        done();
-      }, function(err) {
-        done(err);
-      });
+      done();
+    }, function(err) {
+      done(err);
+    });
   });
 
   it('consume', function(done) {
@@ -26,19 +25,21 @@ function Tests() {
     const sqr = new SqrLib(this.provider);
     function cb(json) {
       const deferred = q.defer();
-      console.log('\n[x] Received', json);
+      console.log('\nReceived', json);
       setTimeout(function() {
-        console.log('\n[x] Done');
+        console.log('\nDone');
         deferred.resolve();
       }, json.wait * 1000);
       return deferred.promise;
     }
-    sqr.consume({queue: 'test', cb: cb})
-      .then(function() {
-        done();
-      }, function(err) {
-        done(err);
-      });
+    sqr.consume({
+      queue: 'test',
+      cb: cb,
+    }).then(function() {
+      done();
+    }, function(err) {
+      done(err);
+    });
   });
 
   it('subscribe', function(done) {
@@ -46,10 +47,9 @@ function Tests() {
     const sqr = new SqrLib(this.provider);
     function cb(json) {
       global.published = json;
-      console.log('\nreceived subscribed msg: ', json);
+      console.log('\nReceived subscribed msg: ', json);
     }
     sqr.subscribe({
-      ex: 'test_ex',
       key: 'test_key',
       cb: cb,
     }).then(function() {
@@ -67,7 +67,6 @@ function Tests() {
       description: 'simple test',
     };
     sqr.publish({
-      ex: 'test_ex',
       key: 'test_key',
       json: json,
     }).then(function() {
@@ -79,7 +78,6 @@ function Tests() {
       done(err);
     });
   });
-
 }
 
 module.exports = Tests;
