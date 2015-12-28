@@ -1,31 +1,4 @@
-# SQR (Send-Queue-Receive)
-
-Send, receive & queue brick for CTA project
-
-## How to use it
-
-### Produce a job
-
-// see samples/produce.js
-const SqrLib = require('../lib/');
-const provider = new SqrLib.rabbitMQProvider();
-const sqr = new SqrLib(provider);
-
-sqr.produce({
-  queue: 'test',
-  json: {
-    job: 'run command',
-    cmd: 'ls',
-  },
-}).then(function() {
-  console.log('Produced new job');
-}, function(err) {
-  console.error('Can\'t produce new job: ', err);
-});
-
-### Consume a job
-
-// see samples/consume.js
+// consume a job
 const q = require('q');
 const SqrLib = require('../lib/');
 const provider = new SqrLib.rabbitMQProvider();
