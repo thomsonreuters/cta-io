@@ -6,6 +6,7 @@ Send, receive & queue brick for CTA project
 
 ### Produce a job
 
+```javascript
 // see samples/produce.js
 const SqrLib = require('../lib/');
 const provider = new SqrLib.rabbitMQProvider();
@@ -22,9 +23,11 @@ sqr.produce({
 }, function(err) {
   console.error('Can\'t produce new job: ', err);
 });
+```
 
 ### Consume a job
 
+```javascript
 // see samples/consume.js
 const q = require('q');
 const SqrLib = require('../lib/');
@@ -48,3 +51,4 @@ sqr.consume({queue: 'test', cb: cb})
   }, function(err) {
     console.error(err);
   });
+```
