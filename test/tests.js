@@ -6,6 +6,71 @@ const q = require('q');
 const global = {};
 
 function Tests() {
+  it('reject produce with no params', function(done) {
+    const sqr = new SqrLib(this.provider);
+    sqr.produce()
+    .then(function() {
+      done('error');
+    }, function(err) {
+      console.log(err);
+      assert(err);
+      done();
+    });
+  });
+
+  it('reject produce with missing param json', function(done) {
+    const sqr = new SqrLib(this.provider);
+    sqr.produce({
+      json: {},
+    }).then(function() {
+      done('error');
+    }, function(err) {
+      console.log(err);
+      assert(err);
+      done();
+    });
+  });
+
+  it('reject produce with missing param queue', function(done) {
+    const sqr = new SqrLib(this.provider);
+    sqr.produce({
+      queue: 'test',
+    }).then(function() {
+      done('error');
+    }, function(err) {
+      console.log(err);
+      assert(err);
+      done();
+    });
+  });
+
+  it('reject produce with wrong param type queue', function(done) {
+    const sqr = new SqrLib(this.provider);
+    sqr.produce({
+      queue: {},
+    }).then(function() {
+      done('error');
+    }, function(err) {
+      console.log(err);
+      assert(err);
+      done();
+    });
+  });
+
+  it('reject produce with wrong param type json', function(done) {
+    const sqr = new SqrLib(this.provider);
+    sqr.produce({
+      queue: 'test',
+      json: 'test',
+    }).then(function() {
+      done('error');
+    }, function(err) {
+      console.log(err);
+      assert(err);
+      done();
+    });
+  });
+
   it('produce', function(done) {
     const sqr = new SqrLib(this.provider);
     sqr.produce({
