@@ -15,9 +15,11 @@ function cb(json) {
   return deferred.promise;
 }
 
-sqr.consume({queue: 'test', cb: cb})
-  .then(function() {
-    console.log('Consumed new job');
-  }, function(err) {
-    console.error(err);
-  });
+sqr.consume({
+  queue: 'test',
+  cb: cb,
+}).then(function() {
+  console.log('Consumed new job');
+}, function(err) {
+  console.error(err);
+});

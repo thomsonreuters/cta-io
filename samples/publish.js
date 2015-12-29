@@ -11,7 +11,6 @@ const json = {
 };
 
 sqr.publish({
-  ex: 'test_ex',
   key: 'test_key',
   json: json,
 }).then(function() {

@@ -1,5 +1,4 @@
 // subscribe to events
-const q = require('q');
 const SqrLib = require('../lib/');
 const provider = new SqrLib.rabbitMQProvider();
 const sqr = new SqrLib(provider);
@@ -9,7 +8,6 @@ function cb(json) {
 }
 
 sqr.subscribe({
-  ex: 'test_ex',
   key: 'test_key',
   cb: cb,
 }).then(function() {
