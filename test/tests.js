@@ -6,17 +6,9 @@ const q = require('q');
 const global = {};
 
 function Tests() {
-  it('reject produce with no params', function(done) {
-    const sqr = new SqrLib(this.provider);
-    sqr.produce()
-    .then(function() {
-      done('error');
-    }, function(err) {
-      console.log(err);
-      assert(err);
-      done();
-    });
-  });
+  /** ---------------------------------------------
+   * produce
+  ---------------------------------------------- */
 
   it('reject produce with missing param json', function(done) {
     const sqr = new SqrLib(this.provider);
@@ -85,6 +77,74 @@ function Tests() {
     });
   });
 
+  /** ---------------------------------------------
+   * consume
+   ---------------------------------------------- */
+
+  it('reject consume with missing param queue', function(done) {
+    const sqr = new SqrLib(this.provider);
+    function cb() {
+      const deferred = q.defer();
+      deferred.resolve();
+      return deferred.promise;
+    }
+    sqr.consume({
+      cb: cb,
+    }).then(function() {
+      done('error');
+    }, function(err) {
+      console.log(err);
+      assert(err);
+      done();
+    });
+  });
+
+  it('reject consume with missing param cb', function(done) {
+    const sqr = new SqrLib(this.provider);
+    sqr.consume({
+      queue: 'test',
+    }).then(function() {
+      done('error');
+    }, function(err) {
+      console.log(err);
+      assert(err);
+      done();
+    });
+  });
+
+  it('reject consume with wrong param queue', function(done) {
+    const sqr = new SqrLib(this.provider);
+    function cb() {
+      const deferred = q.defer();
+      deferred.resolve();
+      return deferred.promise;
+    }
+    sqr.consume({
+      queue: {},
+      cb: cb,
+    }).then(function() {
+      done('error');
+    }, function(err) {
+      console.log(err);
+      assert(err);
+      done();
+    });
+  });
+
+  it('reject consume with wrong param cb', function(done) {
+    const sqr = new SqrLib(this.provider);
+    sqr.consume({
+      queue: 'test',
+      cb: {},
+    }).then(function() {
+      done('error');
+    }, function(err) {
+      console.log(err);
+      assert(err);
+      done();
+    });
+  });
+
   it('consume', function(done) {
     this.timeout(10000);
     const sqr = new SqrLib(this.provider);
@@ -107,6 +167,64 @@ function Tests() {
     });
   });
 
+  /** ---------------------------------------------
+   * subscribe
+   ---------------------------------------------- */
+
+  it('reject subscribe with missing param key', function(done) {
+    const sqr = new SqrLib(this.provider);
+    sqr.subscribe({
+      cb: function() {},
+    }).then(function() {
+      done('error');
+    }, function(err) {
+      console.log(err);
+      assert(err);
+      done();
+    });
+  });
+
+  it('reject subscribe with missing param cb', function(done) {
+    const sqr = new SqrLib(this.provider);
+    sqr.subscribe({
+      key: 'test_key',
+    }).then(function() {
+      done('error');
+    }, function(err) {
+      console.log(err);
+      assert(err);
+      done();
+    });
+  });
+
+  it('reject subscribe with wrong param key', function(done) {
+    const sqr = new SqrLib(this.provider);
+    sqr.subscribe({
+      key: 123,
+      cb: function() {},
+    }).then(function() {
+      done('error');
+    }, function(err) {
+      console.log(err);
+      assert(err);
+      done();
+    });
+  });
+
+  it('reject subscribe with wrong param cb', function(done) {
+    const sqr = new SqrLib(this.provider);
+    sqr.subscribe({
+      key: 'test_key',
+      cb: 'abc',
+    }).then(function() {
+      done('error');
+    }, function(err) {
+      console.log(err);
+      assert(err);
+      done();
+    });
+  });
+
   it('subscribe', function(done) {
     this.timeout(10000);
     const sqr = new SqrLib(this.provider);
@@ -121,6 +239,64 @@ function Tests() {
       done();
     }, function(err) {
       done(err);
+    });
+  });
+
+  /** ---------------------------------------------
+   * publish
+   ---------------------------------------------- */
+
+  it('reject publish with missing param key', function(done) {
+    const sqr = new SqrLib(this.provider);
+    sqr.publish({
+      json: {},
+    }).then(function() {
+      done('error');
+    }, function(err) {
+      console.log(err);
+      assert(err);
+      done();
+    });
+  });
+
+  it('reject publish with missing param json', function(done) {
+    const sqr = new SqrLib(this.provider);
+    sqr.publish({
+      key: 'test_key',
+    }).then(function() {
+      done('error');
+    }, function(err) {
+      console.log(err);
+      assert(err);
+      done();
+    });
+  });
+
+  it('reject publish with wrong param type key', function(done) {
+    const sqr = new SqrLib(this.provider);
+    sqr.publish({
+      key: 123,
+      json: {},
+    }).then(function() {
+      done('error');
+    }, function(err) {
+      console.log(err);
+      assert(err);
+      done();
+    });
+  });
+
+  it('reject publish with wrong param type json', function(done) {
+    const sqr = new SqrLib(this.provider);
+    sqr.publish({
+      key: 'test_key',
+      json: 'abc',
+    }).then(function() {
+      done('error');
+    }, function(err) {
+      console.log(err);
+      assert(err);
+      done();
     });
   });
 
