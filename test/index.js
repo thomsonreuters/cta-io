@@ -8,7 +8,7 @@ describe('Instantiation', function() {
   it('reject if no provider passed', function() {
     try {
       const sqr = new SqrLib();
-    } catch(e) {
+    } catch (e) {
       assert.equal(e.message, 'Missing provider');
     }
   });
@@ -16,8 +16,8 @@ describe('Instantiation', function() {
   it('reject if provider not found', function() {
     try {
       const sqr = new SqrLib('abc');
-    } catch(e) {
-      assert.equal(e.message, 'Provider "abc" not found');
+    } catch (e) {
+      assert.equal(e.message, 'Unknown provider "abc"');
     }
   });
 });
