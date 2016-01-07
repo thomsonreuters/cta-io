@@ -1,7 +1,7 @@
 // produce a job
-const SqrLib = require('../lib/');
-const provider = new SqrLib.rabbitMQProvider();
-const sqr = new SqrLib(provider);
+const SqrLib = require('../lib');
+// const sqr = new SqrLib('rabbitmq');
+const sqr = new SqrLib('wampkue');
 
 sqr.produce({
   queue: 'test',
@@ -10,7 +10,7 @@ sqr.produce({
     cmd: 'ls',
   },
 }).then(function() {
-  console.log('Produced new job');
+  console.log('\nProduced new job');
 }, function(err) {
   console.error('Can\'t produce new job: ', err);
 });

@@ -4,10 +4,10 @@ Send, receive & queue brick for CTA project
 
 ## How to use it
 
-Require lib
+Require Sqr lib
 
 ````javascript
-const SqrLib = require('./lib/');
+const SqrLib = require('./lib');
 ````
 
 ### Choose a provider
@@ -15,7 +15,7 @@ const SqrLib = require('./lib/');
 #### RabbitMQ provider
 
 ````javascript
-const provider = new SqrLib.rabbitMQProvider();
+const provider = new SqrLib('rabbitMQ');
 ````
 This provider uses amqplib node module
 
@@ -24,7 +24,7 @@ Refer to https://www.rabbitmq.com/ to get a working rabbitMQ environment.
 #### WampKue provider
 
 ````javascript
-const provider = new SqrLib.wampKueProvider();
+const provider = new SqrLib('wampkue');
 ````
 
 This provider uses node modules kue (for produce & consume methods) and autobahn (for publish & subscribe methods)

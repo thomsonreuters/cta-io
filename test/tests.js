@@ -1,6 +1,6 @@
 'use strict';
 
-const SqrLib = require('../lib/index.js');
+const SqrLib = require('../lib');
 const assert = require('chai').assert;
 const q = require('q');
 const global = {};
@@ -12,55 +12,67 @@ function Tests() {
 
   it('reject produce with missing param json', function(done) {
     const sqr = new SqrLib(this.provider);
-    sqr.produce({
-      json: {},
-    }).then(function() {
-      done('error');
-    }, function(err) {
-      console.log(err);
-      assert(err);
+    try {
+      sqr.produce({
+        json: {},
+      }).then(function() {
+        done('error');
+      }, function() {
+        done('error');
+      });
+    } catch (e) {
+      console.log(e.message);
       done();
-    });
+    }
   });
 
   it('reject produce with missing param queue', function(done) {
     const sqr = new SqrLib(this.provider);
-    sqr.produce({
-      queue: 'test',
-    }).then(function() {
-      done('error');
-    }, function(err) {
-      console.log(err);
-      assert(err);
+    try {
+      sqr.produce({
+        queue: 'test',
+      }).then(function() {
+        done('error');
+      }, function() {
+        done('error');
+      });
+    } catch (e) {
+      console.log(e.message);
       done();
-    });
+    }
   });
 
   it('reject produce with wrong param type queue', function(done) {
     const sqr = new SqrLib(this.provider);
-    sqr.produce({
-      queue: {},
-    }).then(function() {
-      done('error');
-    }, function(err) {
-      console.log(err);
-      assert(err);
+    try {
+      sqr.produce({
+        queue: {},
+      }).then(function() {
+        done('error');
+      }, function() {
+        done('error');
+      });
+    } catch (e) {
+      console.log(e.message);
       done();
-    });
+    }
   });
 
   it('reject produce with wrong param type json', function(done) {
     const sqr = new SqrLib(this.provider);
-    sqr.produce({
-      queue: 'test',
-      json: 'test',
-    }).then(function() {
-      done('error');
-    }, function(err) {
-      console.log(err);
-      assert(err);
+    try {
+      sqr.produce({
+        queue: 'test',
+        json: 'test',
+      }).then(function() {
+        done('error');
+      }, function() {
+        done('error');
+      });
+    } catch (e) {
+      console.log(e.message);
       done();
-    });
+    }
   });
 
   it('produce', function(done) {
@@ -88,28 +100,34 @@ function Tests() {
       deferred.resolve();
       return deferred.promise;
     }
-    sqr.consume({
-      cb: cb,
-    }).then(function() {
-      done('error');
-    }, function(err) {
-      console.log(err);
-      assert(err);
+    try {
+      sqr.consume({
+        cb: cb,
+      }).then(function() {
+        done('error');
+      }, function() {
+        done('error');
+      });
+    } catch (e) {
+      console.log(e.message);
       done();
-    });
+    }
   });
 
   it('reject consume with missing param cb', function(done) {
     const sqr = new SqrLib(this.provider);
-    sqr.consume({
-      queue: 'test',
-    }).then(function() {
-      done('error');
-    }, function(err) {
-      console.log(err);
-      assert(err);
+    try {
+      sqr.consume({
+        queue: 'test',
+      }).then(function() {
+        done('error');
+      }, function() {
+        done('error');
+      });
+    } catch (e) {
+      console.log(e.message);
       done();
-    });
+    }
   });
 
   it('reject consume with wrong param queue', function(done) {
@@ -119,30 +137,36 @@ function Tests() {
       deferred.resolve();
       return deferred.promise;
     }
-    sqr.consume({
-      queue: {},
-      cb: cb,
-    }).then(function() {
-      done('error');
-    }, function(err) {
-      console.log(err);
-      assert(err);
+    try {
+      sqr.consume({
+        queue: {},
+        cb: cb,
+      }).then(function() {
+        done('error');
+      }, function() {
+        done('error');
+      });
+    } catch (e) {
+      console.log(e.message);
       done();
-    });
+    }
   });
 
   it('reject consume with wrong param cb', function(done) {
     const sqr = new SqrLib(this.provider);
-    sqr.consume({
-      queue: 'test',
-      cb: {},
-    }).then(function() {
-      done('error');
-    }, function(err) {
-      console.log(err);
-      assert(err);
+    try {
+      sqr.consume({
+        queue: 'test',
+        cb: {},
+      }).then(function() {
+        done('error');
+      }, function() {
+        done('error');
+      });
+    } catch (e) {
+      console.log(e.message);
       done();
-    });
+    }
   });
 
   it('consume', function(done) {
@@ -173,56 +197,68 @@ function Tests() {
 
   it('reject subscribe with missing param key', function(done) {
     const sqr = new SqrLib(this.provider);
-    sqr.subscribe({
-      cb: function() {},
-    }).then(function() {
-      done('error');
-    }, function(err) {
-      console.log(err);
-      assert(err);
+    try {
+      sqr.subscribe({
+        cb: function() {},
+      }).then(function() {
+        done('error');
+      }, function() {
+        done('error');
+      });
+    } catch (e) {
+      console.log(e.message);
       done();
-    });
+    }
   });
 
   it('reject subscribe with missing param cb', function(done) {
     const sqr = new SqrLib(this.provider);
-    sqr.subscribe({
-      key: 'test_key',
-    }).then(function() {
-      done('error');
-    }, function(err) {
-      console.log(err);
-      assert(err);
+    try {
+      sqr.subscribe({
+        key: 'test_key',
+      }).then(function() {
+        done('error');
+      }, function() {
+        done('error');
+      });
+    } catch (e) {
+      console.log(e.message);
       done();
-    });
+    }
   });
 
   it('reject subscribe with wrong param key', function(done) {
     const sqr = new SqrLib(this.provider);
-    sqr.subscribe({
-      key: 123,
-      cb: function() {},
-    }).then(function() {
-      done('error');
-    }, function(err) {
-      console.log(err);
-      assert(err);
+    try {
+      sqr.subscribe({
+        key: 123,
+        cb: function() {},
+      }).then(function() {
+        done('error');
+      }, function() {
+        done('error');
+      });
+    } catch (e) {
+      console.log(e.message);
       done();
-    });
+    }
   });
 
   it('reject subscribe with wrong param cb', function(done) {
     const sqr = new SqrLib(this.provider);
-    sqr.subscribe({
-      key: 'test_key',
-      cb: 'abc',
-    }).then(function() {
-      done('error');
-    }, function(err) {
-      console.log(err);
-      assert(err);
+    try {
+      sqr.subscribe({
+        key: 'test_key',
+        cb: 'abc',
+      }).then(function() {
+        done('error');
+      }, function() {
+        done('error');
+      });
+    } catch (e) {
+      console.log(e.message);
       done();
-    });
+    }
   });
 
   it('subscribe', function(done) {
@@ -248,56 +284,68 @@ function Tests() {
 
   it('reject publish with missing param key', function(done) {
     const sqr = new SqrLib(this.provider);
-    sqr.publish({
-      json: {},
-    }).then(function() {
-      done('error');
-    }, function(err) {
-      console.log(err);
-      assert(err);
+    try {
+      sqr.publish({
+        json: {},
+      }).then(function() {
+        done('error');
+      }, function() {
+        done('error');
+      });
+    } catch (e) {
+      console.log(e.message);
       done();
-    });
+    }
   });
 
   it('reject publish with missing param json', function(done) {
     const sqr = new SqrLib(this.provider);
-    sqr.publish({
-      key: 'test_key',
-    }).then(function() {
-      done('error');
-    }, function(err) {
-      console.log(err);
-      assert(err);
+    try {
+      sqr.publish({
+        key: 'test_key',
+      }).then(function() {
+        done('error');
+      }, function() {
+        done('error');
+      });
+    } catch (e) {
+      console.log(e.message);
       done();
-    });
+    }
   });
 
   it('reject publish with wrong param type key', function(done) {
     const sqr = new SqrLib(this.provider);
-    sqr.publish({
-      key: 123,
-      json: {},
-    }).then(function() {
-      done('error');
-    }, function(err) {
-      console.log(err);
-      assert(err);
+    try {
+      sqr.publish({
+        key: 123,
+        json: {},
+      }).then(function() {
+        done('error');
+      }, function() {
+        done('error');
+      });
+    } catch (e) {
+      console.log(e.message);
       done();
-    });
+    }
   });
 
   it('reject publish with wrong param type json', function(done) {
     const sqr = new SqrLib(this.provider);
-    sqr.publish({
-      key: 'test_key',
-      json: 'abc',
-    }).then(function() {
-      done('error');
-    }, function(err) {
-      console.log(err);
-      assert(err);
+    try {
+      sqr.publish({
+        key: 'test_key',
+        json: 'abc',
+      }).then(function() {
+        done('error');
+      }, function() {
+        done('error');
+      });
+    } catch (e) {
+      console.log(e.message);
       done();
-    });
+    }
   });
 
   it('publish', function(done) {
