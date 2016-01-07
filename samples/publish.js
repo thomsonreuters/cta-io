@@ -1,7 +1,9 @@
 // publish events
 const SqrLib = require('../lib');
-// const sqr = new SqrLib('rabbitmq');
-const sqr = new SqrLib('wampkue');
+
+const provider = process.argv.slice(2).join() || 'rabbitmq';
+console.log('Using provider "' + provider + '"');
+const sqr = new SqrLib(provider);
 
 const json = {
   id: '123',
