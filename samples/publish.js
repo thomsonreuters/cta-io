@@ -1,3 +1,5 @@
+'use strict';
+
 // publish events
 const SqrLib = require('../lib');
 

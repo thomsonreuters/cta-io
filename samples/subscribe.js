@@ -1,3 +1,5 @@
+'use strict';
+
 // subscribe to events
 const SqrLib = require('../lib');
 

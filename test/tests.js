@@ -2,7 +2,6 @@
 
 const SqrLib = require('../lib');
 const assert = require('chai').assert;
-const q = require('q');
 const global = {};
 
 function Tests() {
@@ -95,14 +94,9 @@ function Tests() {
 
   it('reject consume with missing param queue', function(done) {
     const sqr = new SqrLib(this.provider);
-    function cb() {
-      const deferred = q.defer();
-      deferred.resolve();
-      return deferred.promise;
-    }
     try {
       sqr.consume({
-        cb: cb,
+        cb: function() {},
       }).then(function() {
         done('error');
       }, function() {
@@ -132,15 +126,10 @@ function Tests() {
 
   it('reject consume with wrong param queue', function(done) {
     const sqr = new SqrLib(this.provider);
-    function cb() {
-      const deferred = q.defer();
-      deferred.resolve();
-      return deferred.promise;
-    }
     try {
       sqr.consume({
         queue: {},
-        cb: cb,
+        cb: function() {},
       }).then(function() {
         done('error');
       }, function() {
@@ -173,13 +162,13 @@ function Tests() {
     this.timeout(10000);
     const sqr = new SqrLib(this.provider);
     function cb(json) {
-      const deferred = q.defer();
-      console.log('\nReceived', json);
-      setTimeout(function() {
-        console.log('\nDone');
-        deferred.resolve();
-      }, json.wait * 1000);
-      return deferred.promise;
+      return new Promise((resolve) => {
+        console.log('\nReceived', json);
+        setTimeout(function() {
+          console.log('\nDone');
+          resolve();
+        }, json.wait * 1000);
+      });
     }
     sqr.consume({
       queue: 'test',

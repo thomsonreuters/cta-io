@@ -1,3 +1,5 @@
+'use strict';
+
 // produce a job
 const SqrLib = require('../lib');
 
