@@ -1,10 +1,10 @@
 'use strict';
 
-const SqrLib = require('../lib');
+const SqrLib = require('../../lib');
 const assert = require('chai').assert;
 const global = {};
 
-function Tests() {
+module.exports = function() {
   /** ---------------------------------------------
    * produce
   ---------------------------------------------- */
@@ -356,6 +356,4 @@ function Tests() {
       done(err);
     });
   });
-}
-
-module.exports = Tests;
+};

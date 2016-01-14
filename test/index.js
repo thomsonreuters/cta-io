@@ -1,32 +1,22 @@
 'use strict';
 
-const assert = require('chai').assert;
-const SqrLib = require('../lib/index.js');
-const tests = require('./tests.js');
+const testAllProviders = require('./inc/all-providers');
+const testValidate = require('./inc/validate');
+const testSqrInit = require('./inc/sqr-init');
 
-describe('Instantiation', function() {
-  it('reject if no provider passed', function() {
-    try {
-      const sqr = new SqrLib();
-    } catch (e) {
-      assert.equal(e.message, 'Missing provider');
-    }
-  });
+describe('validate module', function() {
+  testValidate();
+});
 
-  it('reject if provider not found', function() {
-    try {
-      const sqr = new SqrLib('abc');
-    } catch (e) {
-      assert.equal(e.message, 'Unknown provider "abc"');
-    }
-  });
+describe('SQR module instantiation', function() {
+  testSqrInit();
 });
 
 ['rabbitmq', 'wampkue'].forEach(function(provider) {
-  describe(provider, function() {
+  describe(provider + ' provider', function() {
     before(function() {
       this.provider = provider;
     });
-    tests();
+    testAllProviders();
   });
 });
