@@ -14,7 +14,7 @@ function cb(json) {
     setTimeout(function() {
       console.log('\nJob done');
       resolve();
-    }, 2000);
+    }, 500);
   });
 }
 

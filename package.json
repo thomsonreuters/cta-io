@@ -28,14 +28,18 @@
     "eslint-plugin-react": "^3.9.0",
     "istanbul": "^0.4.1",
     "jsdoc": "^3.4.0",
-    "opener": "^1.4.0",
+    "lodash": "^4.0.0",
     "mocha": "^2.3.4",
+    "moment": "^2.11.1",
+    "node-schedule": "^0.6.0",
+    "opener": "^1.4.0",
     "sinon": "^1.17.0"
   },
   "license": "Apache-2.0",
   "dependencies": {
     "amqplib": "^0.4.0",
     "autobahn": "^0.9.9",
-    "kue": "^0.10.4"
+    "kue": "^0.10.4",
+    "shortid": "^2.2.4"
   }
 }
