@@ -8,7 +8,7 @@ module.exports = function() {
     try {
       const sqr = new SqrLib();
     } catch (e) {
-      assert.equal(e.message, 'Missing provider');
+      assert.equal(e.message, 'Missing provider name');
     }
   });
 
