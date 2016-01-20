@@ -4,7 +4,7 @@ const SqrLib = require('../../../lib');
 const scheduler = require('node-schedule');
 
 const data = require('./data');
-const messages = data(20);
+const messages = data(1000);
 
 const config = {
   cron: '*/1 * * * * *', // cron syntax for the producer to produce jobs

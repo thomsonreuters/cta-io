@@ -2,7 +2,7 @@
 
 // subscribe to events
 const _ = require('lodash');
-const SqrLib = require('../../lib');
+const SqrLib = require('../../../lib');
 const data = require('./data');
 const messages = data();
 const consumed = [];
