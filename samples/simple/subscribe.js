@@ -8,7 +8,10 @@ console.log('Using provider "' + provider + '"');
 const sqr = new SqrLib(provider);
 
 function cb(json) {
-  console.log('\nReceived new message: ', json);
+  return new Promise((resolve) => {
+    console.log('\nReceived new message: ', json);
+    resolve();
+  });
 }
 
 sqr.subscribe({
