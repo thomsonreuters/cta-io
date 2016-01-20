@@ -1,7 +1,7 @@
 'use strict';
 
 // publish events
-const SqrLib = require('../lib');
+const SqrLib = require('../../lib');
 
 const provider = process.argv.slice(2).join() || 'rabbitmq';
 console.log('Using provider "' + provider + '"');

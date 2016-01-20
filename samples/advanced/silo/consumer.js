@@ -2,8 +2,8 @@
 
 // consume a job
 const _ = require('lodash');
-const SqrLib = require('../../lib');
-const data = require('./data');
+const SqrLib = require('../../../lib');
+const data = require('./_data');
 const messages = data();
 const consumed = [];
 
