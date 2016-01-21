@@ -1,10 +1,11 @@
 'use strict';
 
-// publish events
+// publish message
 const SqrLib = require('../../lib');
 
 const provider = process.argv.slice(2).join() || 'rabbitmq';
 console.log('Using provider "' + provider + '"');
+
 const sqr = new SqrLib(provider);
 
 const json = {
@@ -16,8 +17,8 @@ const json = {
 sqr.publish({
   key: 'test_key',
   json: json,
-}).then(function() {
-  console.log('\nPublished');
+}).then(function(response) {
+  console.log('response: ', response);
 }, function(err) {
-  console.error('\nCan\'t publish: ', err);
+  console.error('error: ', err);
 });

@@ -1,19 +1,19 @@
 'use strict';
 
-// consume a job
+// consume message
 const SqrLib = require('../../lib');
 
 const provider = process.argv.slice(2).join() || 'rabbitmq';
 console.log('Using provider "' + provider + '"');
+
 const sqr = new SqrLib(provider);
 
 function cb(json) {
   return new Promise((resolve) => {
-    console.log('\nReceived new job: ', json);
+    console.log('Received new message: ', json);
     // adding timeout to simulate job running
     setTimeout(function() {
-      console.log('\nJob done');
-      resolve();
+      resolve(json);
     }, 500);
   });
 }
@@ -21,8 +21,8 @@ function cb(json) {
 sqr.consume({
   queue: 'test',
   cb: cb,
-}).then(function() {
-  console.log('\nConsumed new job');
+}).then(function(response) {
+  console.log('response: ', response);
 }, function(err) {
-  console.error(err);
+  console.error('error: ', err);
 });
