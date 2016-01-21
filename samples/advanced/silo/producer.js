@@ -23,9 +23,6 @@ function doSchedule() {
     console.log(Object.keys(sqr.provider.silo).length + ' message(s) in silo');
     console.log(sqr.provider.silo);
     config.j.cancel();
-    setTimeout(function() {
-      process.exit(0);
-    }, 500);
     return;
   }
 
@@ -35,7 +32,7 @@ function doSchedule() {
       key: messages[config.current],
     },
   }).then(function(response) {
-    console.log('response:', response);
+    // console.log('response:', response);
   }, function(err) {
     console.error(err);
   });
