@@ -11,11 +11,6 @@ const config = {
   current: -1,
 };
 
-/** store messages to be produced and those that are really consumed by the provider
- *  for comparison the end of the whole test */
-// const produced = [];
-// const consumed = [];
-
 const provider = process.argv.slice(2).join() || 'rabbitmq';
 console.log('Using provider "' + provider + '"');
 
@@ -25,7 +20,8 @@ function doSchedule() {
   config.current++;
   if (config.current > messages.length - 1) {
     console.log('No more messages to publish');
-    console.log('Silo: ', sqr.provider.silo);
+    console.log(Object.keys(sqr.provider.silo).length + ' message(s) in silo');
+    console.log(sqr.provider.silo);
     config.j.cancel();
     setTimeout(function() {
       process.exit(0);
@@ -38,7 +34,9 @@ function doSchedule() {
     json: {
       key: messages[config.current],
     },
-  }).then(null, function(err) {
+  }).then(function(response) {
+    console.log('response:', response);
+  }, function(err) {
     console.error(err);
   });
 }
