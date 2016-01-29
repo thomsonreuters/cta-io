@@ -20,20 +20,20 @@ const sqr = new SqrLib(provider);
 function doSchedule() {
   config.current++;
   if (config.current > messages.length - 1) {
-    console.log('No more messages to produce');
+    console.log('No more messages to publish');
     config.j.cancel();
     return;
   }
 
-  sqr.produce({
-    queue: 'test',
+  sqr.publish({
+    key: 'test_key',
     json: {
       key: messages[config.current],
     },
   }).then(function(response) {
     // console.log('response:', response);
   }, function(err) {
-    console.error('Producer error: ');
+    console.error('Publisher error: ');
     console.error(util.inspect(err, {depth: 5}));
     /*config.j.cancel();
     setTimeout(function() {
