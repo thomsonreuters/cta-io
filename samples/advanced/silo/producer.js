@@ -2,6 +2,7 @@
 
 const SqrLib = require('../../../lib');
 const scheduler = require('node-schedule');
+const util = require('util');
 
 const data = require('./_data');
 const messages = data();
@@ -20,8 +21,6 @@ function doSchedule() {
   config.current++;
   if (config.current > messages.length - 1) {
     console.log('No more messages to publish');
-    console.log(Object.keys(sqr.provider.silo).length + ' message(s) in silo');
-    console.log(sqr.provider.silo);
     config.j.cancel();
     return;
   }
@@ -34,7 +33,12 @@ function doSchedule() {
   }).then(function(response) {
     // console.log('response:', response);
   }, function(err) {
-    console.error(err);
+    console.error('Producer error: ');
+    console.error(util.inspect(err, {depth: 5}));
+    /*config.j.cancel();
+    setTimeout(function() {
+      process.exit(0);
+    }, 500);*/
   });
 }
 

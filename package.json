@@ -39,6 +39,7 @@
   "dependencies": {
     "amqplib": "^0.4.0",
     "autobahn": "^0.9.9",
+    "co": "^4.6.0",
     "kue": "^0.10.4",
     "shortid": "^2.2.4"
   }
