@@ -6,14 +6,13 @@ const global = {};
 
 module.exports = function() {
   it('consume', function(done) {
-    this.timeout(10000);
     const sqr = new SqrLib(this.provider);
     function cb(json) {
       global.consumed = json;
       return new Promise((resolve) => {
         setTimeout(function() {
           resolve();
-        }, 1000);
+        }, 500);
       });
     }
     sqr.consume({
