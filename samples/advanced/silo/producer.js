@@ -1,15 +1,14 @@
 'use strict';
 
 const SqrLib = require('../../../lib');
-const scheduler = require('node-schedule');
 const util = require('util');
 
 const data = require('./_data');
 const messages = data();
 
 const config = {
-  cron: '*/1 * * * * *', // cron syntax for the producer to produce jobs
   current: -1,
+  interval: null,
 };
 
 const provider = process.argv.slice(2).join() || 'rabbitmq';
@@ -19,9 +18,10 @@ const sqr = new SqrLib(provider);
 
 function doSchedule() {
   config.current++;
+  // console.log('Current ' + config.current);
   if (config.current > messages.length - 1) {
     console.log('No more messages to produce');
-    config.j.cancel();
+    clearInterval(config.interval);
     return;
   }
 
@@ -31,17 +31,18 @@ function doSchedule() {
       key: messages[config.current],
     },
   }).then(function(response) {
-    // console.log('response:', response);
+    console.log('response:', response);
   }, function(err) {
     console.error('Producer error: ');
     console.error(util.inspect(err, {depth: 5}));
-    /*config.j.cancel();
-    setTimeout(function() {
-      process.exit(0);
-    }, 500);*/
+    // clearInterval(config.interval);
+    /*
+     config.j.cancel();
+     setTimeout(function() {
+     process.exit(0);
+     }, 500);
+     */
   });
 }
 
-config.j = scheduler.scheduleJob(config.cron, function() {
-  doSchedule();
-});
+config.interval = setInterval(doSchedule, 2000);
