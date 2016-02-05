@@ -2,7 +2,13 @@
 
 const SqrLib = require('../../lib');
 const assert = require('chai').assert;
-const global = {};
+const shortid = require('shortid');
+const global = {
+  queue: shortid.generate(),
+  key: shortid.generate(),
+  consumed: null,
+  published: null,
+};
 
 module.exports = function() {
   it('consume', function(done) {
@@ -16,12 +22,12 @@ module.exports = function() {
       });
     }
     sqr.consume({
-      queue: 'test',
+      queue: global.queue,
       cb: cb,
     }).then(function(response) {
       assert.propertyVal(response, 'result', 'ok');
       done();
-    }, function(err) {
+    }).catch(function(err) {
       done(err);
     });
   });
@@ -32,7 +38,7 @@ module.exports = function() {
       produce: 'a job',
     };
     sqr.produce({
-      queue: 'test',
+      queue: global.queue,
       json: json,
     }).then(function(response) {
       assert.propertyVal(response, 'result', 'ok');
@@ -40,7 +46,7 @@ module.exports = function() {
         assert.deepEqual(json, global.consumed);
         done();
       }, 500);
-    }, function(err) {
+    }).catch(function(err) {
       done(err);
     });
   });
@@ -51,12 +57,12 @@ module.exports = function() {
       global.published = json;
     }
     sqr.subscribe({
-      key: 'test_key',
+      key: global.key,
       cb: cb,
     }).then(function(response) {
       assert.propertyVal(response, 'result', 'ok');
       done();
-    }, function(err) {
+    }).catch(function(err) {
       done(err);
     });
   });
@@ -69,7 +75,7 @@ module.exports = function() {
       description: 'simple test',
     };
     sqr.publish({
-      key: 'test_key',
+      key: global.key,
       json: json,
     }).then(function(response) {
       assert.propertyVal(response, 'result', 'ok');
@@ -77,7 +83,7 @@ module.exports = function() {
         assert.deepEqual(json, global.published);
         done();
       }, 500);
-    }, function(err) {
+    }).catch(function(err) {
       done(err);
     });
   });
