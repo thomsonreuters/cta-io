@@ -11,7 +11,7 @@ const global = {
 };
 
 module.exports = function() {
-  it('consume', function(done) {
+  it('consume with promise callback', function(done) {
     const sqr = new SqrLib(this.provider);
     function cb(json) {
       global.consumed = json;
@@ -32,10 +32,10 @@ module.exports = function() {
     });
   });
 
-  it('produce', function(done) {
+  it('produce for promise consumer', function(done) {
     const sqr = new SqrLib(this.provider);
     const json = {
-      produce: 'a job',
+      produce: 'for promise consumer',
     };
     sqr.produce({
       queue: global.queue,
@@ -45,16 +45,57 @@ module.exports = function() {
       setTimeout(function() {
         assert.deepEqual(json, global.consumed);
         done();
-      }, 500);
+      }, 100);
     }).catch(function(err) {
       done(err);
     });
   });
 
-  it('subscribe', function(done) {
+  it('consume with non promise callback', function(done) {
     const sqr = new SqrLib(this.provider);
     function cb(json) {
-      global.published = json;
+      global.consumed = json;
+      return true;
+    }
+    sqr.consume({
+      queue: global.queue,
+      cb: cb,
+    }).then(function(response) {
+      assert.propertyVal(response, 'result', 'ok');
+      done();
+    }).catch(function(err) {
+      done(err);
+    });
+  });
+
+  it('produce for non promise consumer', function(done) {
+    const sqr = new SqrLib(this.provider);
+    const json = {
+      produce: 'for non promise consumer',
+    };
+    sqr.produce({
+      queue: global.queue,
+      json: json,
+    }).then(function(response) {
+      assert.propertyVal(response, 'result', 'ok');
+      setTimeout(function() {
+        assert.deepEqual(json, global.consumed);
+        done();
+      }, 100);
+    }).catch(function(err) {
+      done(err);
+    });
+  });
+
+  it('subscribe with promise callback', function(done) {
+    const sqr = new SqrLib(this.provider);
+    function cb(json) {
+      global.published1 = json;
+      return new Promise((resolve) => {
+        setTimeout(function() {
+          resolve();
+        }, 500);
+      });
     }
     sqr.subscribe({
       key: global.key,
@@ -67,12 +108,10 @@ module.exports = function() {
     });
   });
 
-  it('publish', function(done) {
+  it('publish for promise subscriber', function(done) {
     const sqr = new SqrLib(this.provider);
     const json = {
-      id: '123',
-      status: 'ok',
-      description: 'simple test',
+      publish: 'for promise subscriber',
     };
     sqr.publish({
       key: global.key,
@@ -80,9 +119,45 @@ module.exports = function() {
     }).then(function(response) {
       assert.propertyVal(response, 'result', 'ok');
       setTimeout(function() {
-        assert.deepEqual(json, global.published);
+        assert.deepEqual(json, global.published1);
         done();
-      }, 500);
+      }, 100);
+    }).catch(function(err) {
+      done(err);
+    });
+  });
+
+  it('subscribe with non promise callback', function(done) {
+    const sqr = new SqrLib(this.provider);
+    function cb(json) {
+      global.published2 = json;
+      return true;
+    }
+    sqr.subscribe({
+      key: global.key,
+      cb: cb,
+    }).then(function(response) {
+      assert.propertyVal(response, 'result', 'ok');
+      done();
+    }).catch(function(err) {
+      done(err);
+    });
+  });
+
+  it('publish for non promise subscriber', function(done) {
+    const sqr = new SqrLib(this.provider);
+    const json = {
+      publish: 'for non promise subscriber',
+    };
+    sqr.publish({
+      key: global.key,
+      json: json,
+    }).then(function(response) {
+      assert.propertyVal(response, 'result', 'ok');
+      setTimeout(function() {
+        assert.deepEqual(json, global.published2);
+        done();
+      }, 100);
     }).catch(function(err) {
       done(err);
     });

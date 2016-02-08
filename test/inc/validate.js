@@ -42,7 +42,9 @@ module.exports = function() {
   it('set optional fields to their defaults', function () {
     const input = {key: 'abc'};
     const pattern = {
-      key: 'string',
+      key: {
+        type: 'string',
+      },
       value: {
         optional: true,
         type: 'object',
