@@ -1,8 +1,6 @@
 'use strict';
 
-const SqrLib = require('../../lib');
-
-const validations = {
+module.exports = {
   produce: [
     {
       message: 'reject produce with missing param queue',
@@ -116,23 +114,4 @@ const validations = {
     },
   ],
 
-};
-
-module.exports = function() {
-  Object.keys(validations).forEach(function (method) {
-    const tests = validations[method];
-    tests.forEach(function (test) {
-      it(test.message, function (done) {
-        const sqr = new SqrLib(this.provider);
-        sqr[method](test.params)
-          .then(function (data) {
-            console.log('data: ', data);
-            done('error');
-          }, function (err) {
-            console.log('err: ', err);
-            done();
-          });
-      });
-    });
-  });
 };
