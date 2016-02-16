@@ -102,19 +102,21 @@ describe('Should survive to provider\'s backend restarts', function() {
       iterations(1, 3, global);
 
       it('Stop ' + provider + ' provider', function(done) {
+        // TODO handle stop programatically
         this.timeout(12000);
         setTimeout(function() {
           done();
-        }, 1000);
+        }, 10000);
       });
 
       iterations(4, 6, global);
 
       it('Start ' + provider + ' provider', function(done) {
+        // TODO handle start programatically
         this.timeout(12000);
         setTimeout(function() {
           done();
-        }, 1000);
+        }, 10000);
       });
 
       iterations(7, 9, global);
