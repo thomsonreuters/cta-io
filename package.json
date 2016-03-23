@@ -1,11 +1,8 @@
 {
-  "name": "cta-sender-receiver",
+  "name": "cta-io",
   "version": "0.0.0",
-  "description": "send/receive to/from cta components",
+  "description": "input/output to cta components",
   "author": "CTA Team <cta@thomsonreuters.com>",
-  "contributors": [
-    "Adnane SAGHIR <adnane.saghir@thomsonreteurs.com>"
-  ],
   "main": "lib/index.js",
   "scripts": {
     "test": "_mocha test/index.js",
@@ -14,7 +11,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git@git.sami.int.thomsonreuters.com:compass/cta-sender-receiver.git"
+    "url": "git@git.sami.int.thomsonreuters.com:compass/cta-io.git"
   },
   "engines": {
     "node": "4.2.2"
