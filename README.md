@@ -1,30 +1,64 @@
-# SQR (Send-Queue-Receive)
+# CTA-IO
 
-Send, receive & queue brick for CTA project
+Send, receive & queue module for CTA Opensource projects
 
 ## How to use it
 
-Require Sqr lib
+Require lib
 
 ````javascript
-const SqrLib = require('./lib');
+const IoLib = require('./lib');
 ````
 
 ### Choose a provider
 
 #### RabbitMQ provider
 
+Default options
+
 ````javascript
-const provider = new SqrLib('rabbitMQ');
+const IoLib = require('./lib');
+const provider = new IoLib('rabbitmq');
 ````
+
+Custom options
+
+````javascript
+const IoLib = require('./lib');
+const provider = new IoLib('rabbitmq', {url: 'amqp://my.mq.host'});
+````
+
 This provider uses amqplib node module
 
 Refer to https://www.rabbitmq.com/ to get a working rabbitMQ environment.
 
 #### WampKue provider
 
+Default options
+
 ````javascript
-const provider = new SqrLib('wampkue');
+const IoLib = require('./lib');
+const provider = new IoLib('wampkue');
+````
+
+Custom options
+
+````javascript
+const options = {
+        wamp: {
+          url: 'ws://my.wamp.host/ws',
+          realm: 'my.wamp.realm',
+        },
+        kue: {
+          prefix: 'my.kue.prefix',
+          redis: {
+            port: 6000,
+            host: 'my.redis.host',
+          },
+        },
+      };
+const IoLib = require('./lib');
+const provider = new IoLib('wampkue', options);
 ````
 
 This provider uses node modules kue (for produce & consume methods) and autobahn (for publish & subscribe methods)
@@ -33,20 +67,18 @@ Kue module needs Redis backend, refer to http://redis.io/ to get a working envir
 
 Autobahn module uses WAMP protocol over crossbar.io, refer to http://crossbar.io/ to get a working environment
   
-### Produce a job
+### Produce
 
 ````javascript
-'use strict';
-
 // produce message
-const SqrLib = require('../../lib');
+const IoLib = require('../../lib');
 
 const provider = process.argv.slice(2).join() || 'rabbitmq';
 console.log('Using provider "' + provider + '"');
 
-const sqr = new SqrLib(provider);
+const io = new IoLib(provider);
 
-sqr.produce({
+io.produce({
   queue: 'test',
   json: {
     job: 'run command',
@@ -57,22 +89,21 @@ sqr.produce({
 }, function(err) {
   console.error('error: ', err);
 });
+
 ````
 
 see samples/simple/produce.js
 
-### Consume a job
+### Consume
 
 ````javascript
-'use strict';
-
 // consume message
-const SqrLib = require('../../lib');
+const IoLib = require('../../lib');
 
 const provider = process.argv.slice(2).join() || 'rabbitmq';
 console.log('Using provider "' + provider + '"');
 
-const sqr = new SqrLib(provider);
+const io = new IoLib(provider);
 
 function cb(json) {
   return new Promise((resolve) => {
@@ -84,7 +115,7 @@ function cb(json) {
   });
 }
 
-sqr.consume({
+io.consume({
   queue: 'test',
   cb: cb,
 }).then(function(response) {
@@ -92,22 +123,23 @@ sqr.consume({
 }, function(err) {
   console.error('error: ', err);
 });
+
 ````
 
 see samples/simple/consume.js
 
-### Subscribe to events
+### Subscribe
 
 ````javascript
 'use strict';
 
 // subscribe to receive messages
-const SqrLib = require('../../lib');
+const IoLib = require('../../lib');
 
 const provider = process.argv.slice(2).join() || 'rabbitmq';
 console.log('Using provider "' + provider + '"');
 
-const sqr = new SqrLib(provider);
+const io = new IoLib(provider);
 
 function cb(json) {
   return new Promise((resolve) => {
@@ -116,7 +148,7 @@ function cb(json) {
   });
 }
 
-sqr.subscribe({
+io.subscribe({
   key: 'test_key',
   cb: cb,
 }).then(function(response) {
@@ -124,22 +156,23 @@ sqr.subscribe({
 }, function(err) {
   console.error('error: ', err);
 });
+
 ````
 
 see samples/simple/subscribe.js
 
-### Publish events
+### Publish
 
 ````javascript
 'use strict';
 
 // publish message
-const SqrLib = require('../../lib');
+const IoLib = require('../../lib');
 
 const provider = process.argv.slice(2).join() || 'rabbitmq';
 console.log('Using provider "' + provider + '"');
 
-const sqr = new SqrLib(provider);
+const io = new IoLib(provider);
 
 const json = {
   id: '123',
@@ -147,7 +180,7 @@ const json = {
   description: 'simple test',
 };
 
-sqr.publish({
+io.publish({
   key: 'test_key',
   json: json,
 }).then(function(response) {
@@ -155,6 +188,7 @@ sqr.publish({
 }, function(err) {
   console.error('error: ', err);
 });
+
 ````
 
 see samples/simple/publish.js

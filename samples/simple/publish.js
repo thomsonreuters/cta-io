@@ -1,12 +1,12 @@
 'use strict';
 
 // publish message
-const SqrLib = require('../../lib');
+const IoLib = require('../../lib');
 
 const provider = process.argv.slice(2).join() || 'rabbitmq';
 console.log('Using provider "' + provider + '"');
 
-const sqr = new SqrLib(provider);
+const io = new IoLib(provider);
 
 const json = {
   id: '123',
@@ -14,7 +14,7 @@ const json = {
   description: 'simple test',
 };
 
-sqr.publish({
+io.publish({
   key: 'test_key',
   json: json,
 }).then(function(response) {

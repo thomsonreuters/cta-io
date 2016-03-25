@@ -1,12 +1,12 @@
 'use strict';
 
 // subscribe to receive messages
-const SqrLib = require('../../lib');
+const IoLib = require('../../lib');
 
 const provider = process.argv.slice(2).join() || 'rabbitmq';
 console.log('Using provider "' + provider + '"');
 
-const sqr = new SqrLib(provider);
+const io = new IoLib(provider);
 
 function cb(json) {
   return new Promise((resolve) => {
@@ -15,7 +15,7 @@ function cb(json) {
   });
 }
 
-sqr.subscribe({
+io.subscribe({
   key: 'test_key',
   cb: cb,
 }).then(function(response) {

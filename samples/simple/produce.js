@@ -1,14 +1,14 @@
 'use strict';
 
 // produce message
-const SqrLib = require('../../lib');
+const IoLib = require('../../lib');
 
 const provider = process.argv.slice(2).join() || 'rabbitmq';
 console.log('Using provider "' + provider + '"');
 
-const sqr = new SqrLib(provider);
+const io = new IoLib(provider);
 
-sqr.produce({
+io.produce({
   queue: 'test',
   json: {
     job: 'run command',
