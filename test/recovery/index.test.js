@@ -42,7 +42,8 @@ function iterations(from, to, global) {
   });
 }
 
-describe('Should survive to provider\'s backend restarts', function() {
+// TODO automate provider reconnection to test recovery
+describe.skip('Should survive to provider\'s backend restarts', function() {
   Object.keys(providers).forEach(function(provider) {
     const global = {
       index: 1,
