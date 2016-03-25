@@ -28,6 +28,30 @@ describe('SQR main module', function() {
         assert.equal(e.message, 'Unknown provider "abc"');
       }
     });
+    it('pass custom options using rabbitmq provider', function() {
+      const options = {
+        url: 'amqp://my.mq.host',
+      };
+      const sqr = new SqrLib('rabbitmq', options);
+      assert.equal(sqr.provider.options, options);
+    });
+    it('pass custom options using wampkue provider', function() {
+      const options = {
+        wamp: {
+          url: 'ws://my.wamp.host/ws',
+          realm: 'my.wamp.realm',
+        },
+        kue: {
+          prefix: 'my.kue.prefix',
+          redis: {
+            port: 6000,
+            host: 'my.redis.host',
+          },
+        },
+      };
+      const sqr = new SqrLib('wampkue', options);
+      assert.equal(sqr.provider.options, options);
+    });
   });
   Object.keys(providers).forEach(function(provider) {
     context(provider + ' common params validations', function() {
