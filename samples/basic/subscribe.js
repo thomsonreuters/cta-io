@@ -8,16 +8,20 @@ console.log('Using provider "' + provider + '"');
 
 const io = new IoLib(provider);
 
-function cb(json) {
+function cbp(json) {
   return new Promise((resolve) => {
     console.log('Received new message: ', json);
     resolve(json);
   });
 }
 
+function cbn(json) {
+  console.log('Received new message: ', json);
+}
+
 io.subscribe({
   key: 'test_key',
-  cb: cb,
+  cb: cbn,
 }).then(function(response) {
   console.log('response: ', response);
 }, function(err) {
