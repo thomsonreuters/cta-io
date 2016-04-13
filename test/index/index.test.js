@@ -12,7 +12,7 @@ const global = {
   published: null,
 };
 
-describe('SQR main module', function() {
+describe('cta-io main module', function() {
   context('Instanciation', function() {
     it('reject if no provider passed', function() {
       try {
@@ -35,7 +35,7 @@ describe('SQR main module', function() {
       const sqr = new SqrLib('rabbitmq', options);
       assert.equal(sqr.provider.options, options);
     });
-    it('pass custom options using wampkue provider', function() {
+    it.skip('pass custom options using wampkue provider', function() {
       const options = {
         wamp: {
           url: 'ws://my.wamp.host/ws',
@@ -87,7 +87,7 @@ describe('SQR main module', function() {
           queue: global.queue,
           cb: cb,
         }).then(function(response) {
-          assert.propertyVal(response, 'result', 'ok');
+          assert.property(response, 'result');
           done();
         }).catch(function(err) {
           done(err);
@@ -113,6 +113,19 @@ describe('SQR main module', function() {
         });
       });
 
+      it('info', function(done) {
+        const sqr = new SqrLib(provider);
+        sqr.info({
+          queue: global.queue,
+        }).then(function(response) {
+          assert.property(response, 'result');
+          assert.propertyVal(response.result, 'messageCount', 0);
+          done();
+        }).catch(function(err) {
+          done(err);
+        });
+      });
+
       it('consume with non promise callback', function(done) {
         const sqr = new SqrLib(provider);
         function cb(json) {
@@ -123,7 +136,7 @@ describe('SQR main module', function() {
           queue: global.queue,
           cb: cb,
         }).then(function(response) {
-          assert.propertyVal(response, 'result', 'ok');
+          assert.property(response, 'result');
           done();
         }).catch(function(err) {
           done(err);
