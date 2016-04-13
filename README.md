@@ -32,41 +32,6 @@ This provider uses amqplib node module
 
 Refer to https://www.rabbitmq.com/ to get a working rabbitMQ environment.
 
-#### WampKue provider
-
-Default options
-
-````javascript
-const IoLib = require('./lib');
-const provider = new IoLib('wampkue');
-````
-
-Custom options
-
-````javascript
-const options = {
-        wamp: {
-          url: 'ws://my.wamp.host/ws',
-          realm: 'my.wamp.realm',
-        },
-        kue: {
-          prefix: 'my.kue.prefix',
-          redis: {
-            port: 6000,
-            host: 'my.redis.host',
-          },
-        },
-      };
-const IoLib = require('./lib');
-const provider = new IoLib('wampkue', options);
-````
-
-This provider uses node modules kue (for produce & consume methods) and autobahn (for publish & subscribe methods)
-
-Kue module needs Redis backend, refer to http://redis.io/ to get a working environment
-
-Autobahn module uses WAMP protocol over crossbar.io, refer to http://crossbar.io/ to get a working environment
-  
 ### Produce
 
 ````javascript
