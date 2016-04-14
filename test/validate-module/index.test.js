@@ -3,7 +3,7 @@
 const assert = require('chai').assert;
 const validate = require('../../lib/validate');
 
-describe('Validate module', function() {
+describe('validate-module', function() {
   it('reject if invalid pattern', function() {
     try {
       validate();

@@ -8,7 +8,7 @@ const global = {
   key2: o.shortid.generate(),
 };
 
-describe('cta-io main module', function() {
+describe('index -> main methods', function() {
   Object.keys(o.providers).forEach(function(provider) {
     context(provider + ' common methods', function() {
       it('consume with promise callback', function(done) {
@@ -42,7 +42,7 @@ describe('cta-io main module', function() {
           queue: global.queue1,
           json: json,
         }).then(function(response) {
-          o.assert.propertyVal(response, 'result', 'ok');
+          o.assert.property(response, 'result');
           setTimeout(function() {
             o.assert.deepEqual(json, global.consumed1);
             done();
@@ -76,7 +76,7 @@ describe('cta-io main module', function() {
             queue: global.queue1,
             json: { date: new Date() },
           });
-          o.assert.propertyVal(produce, 'result', 'ok');
+          o.assert.property(produce, 'result');
           // finally, get queue info
           const info = yield io.info({
             queue: global.queue1,
@@ -117,7 +117,7 @@ describe('cta-io main module', function() {
           queue: global.queue2,
           json: json,
         }).then(function(response) {
-          o.assert.propertyVal(response, 'result', 'ok');
+          o.assert.property(response, 'result');
           setTimeout(function() {
             o.assert.deepEqual(json, global.consumed2);
             done();
@@ -141,7 +141,7 @@ describe('cta-io main module', function() {
           key: global.key1,
           cb: cb,
         }).then(function(response) {
-          o.assert.propertyVal(response, 'result', 'ok');
+          o.assert.property(response, 'result');
           done();
         }).catch(function(err) {
           done(err);
@@ -157,7 +157,7 @@ describe('cta-io main module', function() {
           key: global.key1,
           json: json,
         }).then(function(response) {
-          o.assert.propertyVal(response, 'result', 'ok');
+          o.assert.property(response, 'result');
           setTimeout(function() {
             o.assert.deepEqual(json, global.published1);
             done();
@@ -177,7 +177,7 @@ describe('cta-io main module', function() {
           key: global.key2,
           cb: cb,
         }).then(function(response) {
-          o.assert.propertyVal(response, 'result', 'ok');
+          o.assert.property(response, 'result');
           done();
         }).catch(function(err) {
           done(err);
@@ -193,7 +193,7 @@ describe('cta-io main module', function() {
           key: global.key2,
           json: json,
         }).then(function(response) {
-          o.assert.propertyVal(response, 'result', 'ok');
+          o.assert.property(response, 'result');
           setTimeout(function() {
             o.assert.deepEqual(json, global.published2);
             done();
