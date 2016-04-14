@@ -1,7 +1,6 @@
 'use strict';
 
-const assert = require('chai').assert;
-const SqrLib = require('../../../lib/index.js');
+const o = require('../../common');
 
 const validations = [
   {
@@ -60,14 +59,14 @@ const validations = [
 describe('RabbitMQ extra params validation', function() {
   validations.forEach(function(test) {
     it('reject ' + test.method + ' with wrong extra params types', function(done) {
-      const sqr = new SqrLib('rabbitmq');
-      sqr[test.method](test.params)
+      const io = new o.Io('rabbitmq');
+      io[test.method](test.params)
         .then(function(data) {
           console.log('data: ', data);
           done('error');
         }, function(err) {
           console.log('err: ', err);
-          assert.include(err, 'validate module => invalid parameter type');
+          o.assert.include(err, 'validate module => invalid parameter type');
           done();
         });
     });

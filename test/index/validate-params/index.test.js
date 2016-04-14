@@ -10,7 +10,7 @@ describe('validate providers common params', function() {
         const tests = validations[method];
         tests.forEach(function (test) {
           it(test.message, function (done) {
-            const io = new o.io(provider);
+            const io = new o.Io(provider);
             io[method](test.params)
               .then(function (data) {
                 console.log('data: ', data);
