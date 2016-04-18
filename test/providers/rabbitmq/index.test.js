@@ -17,6 +17,18 @@ const validations = [
   },
 
   {
+    method: 'get',
+    params: {
+      queue: 'test',
+      extra: {
+        mq_noAck: 123,
+        mq_prefetch: 'abc',
+        mq_durable: 'abc',
+      },
+    },
+  },
+
+  {
     method: 'consume',
     params: {
       queue: 'test',
