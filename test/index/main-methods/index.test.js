@@ -11,6 +11,44 @@ const global = {
 describe('index -> main methods', function() {
   Object.keys(o.providers).forEach(function(provider) {
     context(provider + ' common methods', function() {
+      it('get with promise callback', function(done) {
+        const io = new o.Io(provider);
+        function cb(json) {
+          global.consumed = json;
+          return new Promise((resolve) => {
+            setTimeout(function() {
+              resolve();
+            }, 500);
+          });
+        }
+        io.get({
+          queue: global.queue1,
+          cb: cb,
+        }).then(function(response) {
+          o.assert.property(response, 'result');
+          done();
+        }).catch(function(err) {
+          done(err);
+        });
+      });
+
+      it('get with non promise callback', function(done) {
+        const io = new o.Io(provider);
+        function cb(json) {
+          global.consumed = json;
+          return true;
+        }
+        io.get({
+          queue: global.queue2,
+          cb: cb,
+        }).then(function(response) {
+          o.assert.property(response, 'result');
+          done();
+        }).catch(function(err) {
+          done(err);
+        });
+      });
+
       it('consume with promise callback', function(done) {
         const io = new o.Io(provider);
         function cb(json) {
