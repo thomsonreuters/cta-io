@@ -12,4 +12,9 @@ module.exports = {
   co: co,
   Io: Io,
   providers: providers,
+  json: function(){
+    return {
+      date: new Date().toISOString(),
+    };
+  }
 };
