@@ -2,7 +2,7 @@
 
 const o = require('../../common');
 
-describe('index -> instantiate', function() {
+describe('index / instantiate', function() {
   it('reject if no provider passed', function() {
     try {
       const io = new o.Io();

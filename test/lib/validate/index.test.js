@@ -1,9 +1,9 @@
 'use strict';
 
 const assert = require('chai').assert;
-const validate = require('../../lib/validate');
+const validate = require('../../../lib/validate');
 
-describe('validate-module', function() {
+describe('validate', function() {
   it('reject if invalid pattern', function() {
     try {
       validate();
