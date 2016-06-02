@@ -1,6 +1,6 @@
 'use strict';
 
-const o = require('../../common');
+const o = require('../common');
 
 describe('index / instantiate', function() {
   it('reject if no provider passed', function() {
@@ -22,6 +22,6 @@ describe('index / instantiate', function() {
       url: 'amqp://my.mq.host',
     };
     const io = new o.Io('rabbitmq', options);
-    o.assert.equal(io.options, options);
+    o.assert.deepEqual(io.options, options);
   });
 });
