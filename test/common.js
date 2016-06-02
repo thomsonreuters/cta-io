@@ -2,8 +2,8 @@
 
 const assert = require('chai').assert;
 const sinon = require('sinon');
-const Io = require('../lib');
-const providers = require('../lib/providers');
+const Io = require('../lib/io');
+const providers = require('../lib/io/providers');
 const shortid = require('shortid');
 const co = require('co');
 

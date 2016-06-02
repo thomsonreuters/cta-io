@@ -9,9 +9,7 @@ console.log('Using provider "' + provider + '"');
 const io = new IoLib(provider);
 
 const json = {
-  id: '123',
-  status: 'ok',
-  description: 'simple test',
+  date: new Date().toISOString(),
 };
 
 io.publish({

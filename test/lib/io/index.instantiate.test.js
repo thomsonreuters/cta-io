@@ -1,6 +1,6 @@
 'use strict';
 
-const o = require('../common');
+const o = require('../../common');
 
 describe('index / instantiate', function() {
   it('reject if no provider passed', function() {

@@ -1,6 +1,6 @@
 'use strict';
 
-const o = require('../common');
+const o = require('../../common');
 const global = {
   queue1: o.shortid.generate(),
   queue2: o.shortid.generate(),

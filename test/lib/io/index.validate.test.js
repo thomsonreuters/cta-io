@@ -1,6 +1,6 @@
 'use strict';
 
-const o = require('../common');
+const o = require('../../common');
 const validations = require('./index.validate.testdata.js');
 
 describe('index / validate params', function() {

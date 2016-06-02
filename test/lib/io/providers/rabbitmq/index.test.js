@@ -1,6 +1,6 @@
 'use strict';
 
-const o = require('../../../common');
+const o = require('../../../../common');
 
 describe('rabbitmq provider', function() {
   it('should set default params', function() {
