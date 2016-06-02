@@ -10,7 +10,7 @@ describe('index / instantiate', function() {
       o.assert.equal(e.message, 'Missing provider name');
     }
   });
-  it('reject if provider not found', function() {
+  it('reject if unknown provider', function() {
     try {
       const io = new o.Io('abc');
     } catch (e) {
@@ -22,6 +22,6 @@ describe('index / instantiate', function() {
       url: 'amqp://my.mq.host',
     };
     const io = new o.Io('rabbitmq', options);
-    o.assert.equal(io.provider.options, options);
+    o.assert.equal(io.options, options);
   });
 });

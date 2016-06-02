@@ -58,18 +58,30 @@ describe('rabbitmq provider', function() {
   });
 
   it('should reconnect on disconnection', function(done) {
-    this.timeout(10000);
     const provider = new o.providers.rabbitmq();
-    provider.reconnectAfter = 100;
-    provider.on('reconnected', done);
+    const _reconnect = o.sinon.spy(provider, '_reconnect');
+    const connect = o.sinon.spy(provider, 'connect');
+    const _reconnectConsumers = o.sinon.spy(provider, '_reconnectConsumers');
+    const clock = o.sinon.useFakeTimers();
     provider.connect()
-    .then(function() {
-      provider.connection.emit('close');
-    })
-    .catch(function(err) {
-      console.error(err);
-      done('error');
-    });
+      .then(function() {
+        provider.connection.emit('close');
+        clock.tick(provider.reconnectAfter);
+        _reconnect.restore();
+        o.sinon.assert.called(_reconnect);
+        connect.restore();
+        o.sinon.assert.callCount(connect, 2);
+        clock.restore();
+        setTimeout(function() {
+          _reconnectConsumers.restore();
+          o.sinon.assert.calledOnce(_reconnectConsumers);
+          done();
+        }, 500);
+      })
+      .catch(function(err) {
+        console.error(err);
+        done('error');
+      });
   });
 
   it('healthCheck', function(done) {
