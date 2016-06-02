@@ -97,4 +97,38 @@ describe('rabbitmq provider', function() {
         done('error');
       });
   });
+
+  it('ack', function(done) {
+    return o.co(function* coroutine() {
+      const provider = new o.providers.rabbitmq();
+      yield provider.connect();
+      const ack = o.sinon.stub(provider.channel, 'ack');
+      provider.msg.abc = {
+        msg: {a: 1},
+      };
+      yield provider.ack('abc');
+      o.sinon.assert.calledWith(ack, {a: 1});
+      done();
+    })
+    .catch((err) => {
+      done(err);
+    });
+  });
+
+  it('nack', function(done) {
+    return o.co(function* coroutine() {
+      const provider = new o.providers.rabbitmq();
+      yield provider.connect();
+      const nack = o.sinon.stub(provider.channel, 'nack');
+      provider.msg.abc = {
+        msg: {a: 1},
+      };
+      yield provider.nack('abc');
+      o.sinon.assert.calledWith(nack, {a: 1});
+      done();
+    })
+    .catch((err) => {
+      done(err);
+    });
+  });
 });
