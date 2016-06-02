@@ -103,7 +103,7 @@ describe('rabbitmq provider', function() {
       const provider = new o.providers.rabbitmq();
       yield provider.connect();
       const ack = o.sinon.stub(provider.channel, 'ack');
-      provider.msg.abc = {
+      provider.messages.abc = {
         msg: {a: 1},
       };
       yield provider.ack('abc');
@@ -120,7 +120,7 @@ describe('rabbitmq provider', function() {
       const provider = new o.providers.rabbitmq();
       yield provider.connect();
       const nack = o.sinon.stub(provider.channel, 'nack');
-      provider.msg.abc = {
+      provider.messages.abc = {
         msg: {a: 1},
       };
       yield provider.nack('abc');
