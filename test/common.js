@@ -15,6 +15,7 @@ module.exports = {
   co: co,
   Io: Io,
   providers: providers,
+  IoBrick: require('../lib'),
   json: function() {
     return {
       date: new Date().toISOString(),
