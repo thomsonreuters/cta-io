@@ -5,8 +5,9 @@ const o = require('../../../common');
 describe('rabbitmq provider', function() {
   it('should set default params', function() {
     const provider = new o.providers.rabbitmq();
+    const defaults = require('../../../../lib/providers/rabbitmq/config.defaults');
     o.assert(provider.options, {
-      url: 'amqp://localhost?heartbeat=60',
+      url: defaults.url,
     });
   });
 
