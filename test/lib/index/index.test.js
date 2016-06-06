@@ -44,7 +44,7 @@ describe('index / io as a brick', function() {
     });
   });
 
-  it('should process with execution acknowledge', function(done) {
+  it('should process with ack', function(done) {
     return o.co(function* coroutine() {
       const brick = new o.IoBrick({}, {
         name: 'cta-io',
@@ -77,9 +77,18 @@ describe('index / io as a brick', function() {
       });
   });
 
-  it('should process with queue get', function(done) {
+  it('should process with get', function(done) {
     return o.co(function* coroutine() {
-      const brick = new o.IoBrick({}, {
+      const cementHelper = {
+        createContext: function(json) {
+          return {
+            publish: function() {
+
+            },
+          };
+        },
+      };
+      const brick = new o.IoBrick(cementHelper, {
         name: 'cta-io',
         properties: {
           provider: {
@@ -87,7 +96,7 @@ describe('index / io as a brick', function() {
           },
         },
       });
-      const _get = o.sinon.stub(brick.io, 'get', function(queue) {
+      const _get = o.sinon.stub(brick.io, 'get', function() {
         return Promise.resolve({
           result: {
             json: {
@@ -114,5 +123,38 @@ describe('index / io as a brick', function() {
       .catch((err) => {
         done(err);
       });
+  });
+
+  it('should process with produce', function(done) {
+    return o.co(function* coroutine() {
+      const brick = new o.IoBrick({}, {
+        name: 'cta-io',
+        properties: {
+          provider: {
+            name: 'rabbitmq',
+          },
+        },
+      });
+      const _produce = o.sinon.stub(brick.io, 'produce', function() {
+        return Promise.resolve({
+          result: {},
+        });
+      });
+      const context = new Context();
+      context.data = {
+        payload: {
+          id: '01',
+          status: 'ok',
+          message: 'done',
+        },
+      };
+      yield brick.process(context);
+      _produce.restore();
+      o.sinon.assert.calledOnce(_produce);
+      done();
+    })
+    .catch((err) => {
+      done(err);
+    });
   });
 });
