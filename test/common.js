@@ -18,6 +18,7 @@ module.exports = {
   IoBrick: require('../lib'),
   json: function() {
     return {
+      id: shortid.generate(),
       date: new Date().toISOString(),
     };
   },

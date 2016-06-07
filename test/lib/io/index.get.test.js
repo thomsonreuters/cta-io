@@ -53,35 +53,24 @@ describe('index / get', function() {
       });
 
       it('get first message in queue1 with promise callback', function(done) {
-        function cb(json) {
-          o.assert.deepEqual(json, global.produced1);
-          return new Promise((resolve) => {
-            setTimeout(function() {
-              done();
-              resolve();
-            }, 500);
-          });
-        }
         io.get({
           queue: global.queue1,
-          cb: cb,
         }).then(function(response) {
           o.assert.property(response, 'result');
+          o.assert.deepEqual(response.result.json, global.produced1);
+          done();
         }).catch(function(err) {
           done(err);
         });
       });
 
       it('get second message in queue1 with non promise callback', function(done) {
-        function cb(json) {
-          o.assert.deepEqual(json, global.produced2);
-          done();
-        }
         io.get({
           queue: global.queue1,
-          cb: cb,
         }).then(function(response) {
           o.assert.property(response, 'result');
+          o.assert.deepEqual(response.result.json, global.produced2);
+          done();
         }).catch(function(err) {
           done(err);
         });
