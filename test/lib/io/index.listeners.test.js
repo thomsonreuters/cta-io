@@ -74,7 +74,7 @@ describe.skip('index / listeners', function() {
       });
 
       it('cancel consumer1', function(done) {
-        return o.co(function* coroutine () {
+        return o.co(function* coroutine() {
           const cancel = yield io.cancel(global.consumer1);
           o.assert.property(cancel, 'result');
           done();

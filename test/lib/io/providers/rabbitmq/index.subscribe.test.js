@@ -3,9 +3,8 @@
 const o = require('../../../../common');
 
 describe('rabbitmq subscribe', function() {
-
   it('subscribe with ack set to resolve', function (done) {
-    return o.co(function* coroutine () {
+    return o.co(function* coroutine() {
       const provider = new o.providers.rabbitmq();
       yield provider.connect();
       const ack = o.sinon.stub(provider.channel, 'ack');
@@ -24,7 +23,7 @@ describe('rabbitmq subscribe', function() {
         key: queue,
         json: json,
       });
-      setTimeout(function () {
+      setTimeout(function() {
         o.sinon.assert.calledOnce(spy);
         o.sinon.assert.calledWith(spy, json);
         o.sinon.assert.calledOnce(ack);
@@ -37,7 +36,7 @@ describe('rabbitmq subscribe', function() {
   });
 
   it('subscribe with ack set to auto', function (done) {
-    return o.co(function* coroutine () {
+    return o.co(function* coroutine() {
       const provider = new o.providers.rabbitmq();
       yield provider.connect();
       const _ack = o.sinon.stub(provider.channel, 'ack');
@@ -48,7 +47,7 @@ describe('rabbitmq subscribe', function() {
       };
       const cb = function (doc) {
         return new Promise((resolve) => {
-          setTimeout(function () {
+          setTimeout(function() {
             resolve(doc);
           }, 100);
         });
@@ -63,7 +62,7 @@ describe('rabbitmq subscribe', function() {
         key: queue,
         json: json,
       });
-      setTimeout(function () {
+      setTimeout(function() {
         _ack.restore();
         o.sinon.assert.notCalled(_ack);
         o.sinon.assert.calledOnce(_cb);
