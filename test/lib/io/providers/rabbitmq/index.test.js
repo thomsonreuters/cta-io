@@ -2,7 +2,7 @@
 
 const o = require('../../../../common');
 
-describe('rabbitmq provider', function() {
+describe('rabbitmq common', function() {
   it('should set default params', function() {
     const provider = new o.providers.rabbitmq();
     o.assert(provider.options, {
@@ -126,36 +126,6 @@ describe('rabbitmq provider', function() {
       yield provider.nack('abc');
       o.sinon.assert.calledWith(nack, {a: 1});
       done();
-    })
-    .catch((err) => {
-      done(err);
-    });
-  });
-
-  it('consume', function(done) {
-    return o.co(function* coroutine() {
-      const provider = new o.providers.rabbitmq();
-      yield provider.connect();
-      const queue = o.shortid.generate();
-      const json = {
-        id: '01',
-        timestamp: Date.now(),
-      };
-      let spy = o.sinon.spy();
-      const res = yield provider.consume({
-        queue: queue,
-        cb: spy,
-        ack: 'resolve',
-      });
-      yield provider.produce({
-        queue: queue,
-        json: json,
-      });
-      setTimeout(function() {
-        o.sinon.assert.calledOnce(spy);
-        o.sinon.assert.calledWith(spy, json);
-        done();
-      }, 100);
     })
     .catch((err) => {
       done(err);
