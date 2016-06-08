@@ -4,17 +4,19 @@ const o = require('../../../../common');
 
 describe('rabbitmq common', function() {
   it('should set default params', function() {
-    const provider = new o.providers.rabbitmq();
-    o.assert(provider.options, {
+    const io = new o.providers.rabbitmq();
+    o.assert.deepEqual(io.config, {
       url: 'amqp://localhost?heartbeat=60',
+      reconnectAfter: 60 * 1000,
+      clearInterval: 60 * 60 * 1000,
+      clearOffset: 24 * 60 * 60 * 1000,
     });
   });
 
   it('should set custom params', function() {
-    const provider = new o.providers.rabbitmq({url: 'amqp://mydomain.com'});
-    o.assert(provider.options, {
-      url: 'amqp://mydomain.com',
-    });
+    const url = 'amqp://mydomain.com';
+    const io = new o.providers.rabbitmq({url: url});
+    o.assert.strictEqual(io.config.url, url);
   });
 
   it('should connect when there is no connection', function(done) {
@@ -66,7 +68,7 @@ describe('rabbitmq common', function() {
     provider.connect()
       .then(function() {
         provider.connection.emit('close');
-        clock.tick(provider.reconnectAfter);
+        clock.tick(provider.config.reconnectAfter);
         _reconnect.restore();
         o.sinon.assert.called(_reconnect);
         connect.restore();
@@ -130,5 +132,27 @@ describe('rabbitmq common', function() {
     .catch((err) => {
       done(err);
     });
+  });
+
+  it('_houseKeeping', function(done) {
+    const io = new o.providers.rabbitmq({
+      clearInterval: 100,
+    });
+    const now = Date.now();
+    io.messages = {
+      a: {
+        msg: {},
+        timestamp: now - io.config.clearOffset,
+      },
+      b: {
+        msg: {},
+        timestamp: now,
+      },
+    };
+    io._houseKeeping();
+    setTimeout(function() {
+      o.assert.sameMembers(Object.keys(io.messages), ['b']);
+      done();
+    }, io.config.clearInterval);
   });
 });
