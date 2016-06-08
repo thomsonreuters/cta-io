@@ -3,8 +3,8 @@
 const o = require('../../common');
 const Context = require('events').EventEmitter;
 
-describe('index / io as a brick', function() {
-  it('contructor', function() {
+describe('Io Brick', function() {
+  it('constructor', function() {
     const brick = new o.IoBrick({}, {
       name: 'cta-io',
       properties: {

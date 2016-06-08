@@ -1,22 +1,46 @@
 'use strict';
 
-const o = require('../../../../common');
+const o = require('../../../../../common');
 
 describe('rabbitmq common', function() {
   it('should set default params', function() {
+    const defaults = require('../../../../../../lib/io/providers/rabbitmq/config.defaults');
     const io = new o.providers.rabbitmq();
     o.assert.deepEqual(io.config, {
-      url: 'amqp://localhost?heartbeat=60',
-      reconnectAfter: 60 * 1000,
-      clearInterval: 60 * 60 * 1000,
-      clearOffset: 24 * 60 * 60 * 1000,
+      url: defaults.url,
+      reconnectAfter: defaults.reconnectAfter,
+      clearInterval: defaults.clearInterval,
+      clearOffset: defaults.clearOffset,
     });
   });
 
   it('should set custom params', function() {
-    const url = 'amqp://mydomain.com';
-    const io = new o.providers.rabbitmq({url: url});
-    o.assert.strictEqual(io.config.url, url);
+    const config = {
+      url: 'amqp://mydomain.com',
+      reconnectAfter: 10 * 1000,
+      clearInterval: 60 * 60 * 1000,
+      clearOffset: 2 * 60 * 60 * 1000,
+    };
+    const io = new o.providers.rabbitmq(config);
+    o.assert.deepEqual(io.config, config);
+  });
+
+  it('processMsg', function() {
+    const io = new o.providers.rabbitmq();
+    let msg = {
+      content: new Buffer(JSON.stringify({foo: 'bar'})),
+    };
+    let json = io._processMsg(msg, true);
+    o.assert.property(json, 'id');
+    o.assert.property(io.messages, json.id);
+    o.assert.property(io.messages[json.id], 'msg');
+    o.assert.property(io.messages[json.id], 'timestamp');
+    msg = {
+      content: new Buffer(JSON.stringify({id: 'def'})),
+    };
+    json = io._processMsg(msg);
+    o.assert.property(json, 'id');
+    o.assert.notProperty(io.messages, json.id);
   });
 
   it('should connect when there is no connection', function(done) {
@@ -134,7 +158,7 @@ describe('rabbitmq common', function() {
     });
   });
 
-  it('_houseKeeping', function(done) {
+  it('houseKeeping', function(done) {
     const io = new o.providers.rabbitmq({
       clearInterval: 100,
     });
@@ -154,5 +178,35 @@ describe('rabbitmq common', function() {
       o.assert.sameMembers(Object.keys(io.messages), ['b']);
       done();
     }, io.config.clearInterval);
+  });
+
+  it('should return queue information', function (done) {
+    return o.co(function* coroutine() {
+      const io = new o.providers.rabbitmq();
+      yield io.connect();
+      const assertQueue = o.sinon.spy(io.channel, 'assertQueue');
+      const queue = o.shortid.generate();
+      yield io.info(queue);
+      o.sinon.assert.calledOnce(assertQueue);
+      done();
+    })
+      .catch((err) => {
+        done(err);
+      });
+  });
+
+  it('should cancel a consumer', function (done) {
+    return o.co(function* coroutine() {
+      const io = new o.providers.rabbitmq();
+      yield io.connect();
+      const cancel = o.sinon.spy(io.channel, 'cancel');
+      const queue = o.shortid.generate();
+      yield io.cancel('abc');
+      o.sinon.assert.calledOnce(cancel);
+      done();
+    })
+      .catch((err) => {
+        done(err);
+      });
   });
 });

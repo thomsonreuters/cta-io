@@ -1,8 +1,8 @@
 'use strict';
 
-const o = require('../../common');
+const o = require('../../../common');
 
-describe('index / instantiate', function() {
+describe('Io Module Constructor', function() {
   it('reject if no provider passed', function() {
     try {
       const io = new o.Io();
@@ -16,12 +16,5 @@ describe('index / instantiate', function() {
     } catch (e) {
       o.assert.equal(e.message, 'Unknown provider "abc"');
     }
-  });
-  it('pass custom options using rabbitmq provider', function() {
-    const options = {
-      url: 'amqp://my.mq.host',
-    };
-    const io = new o.Io('rabbitmq', options);
-    o.assert.deepEqual(io.options, options);
   });
 });

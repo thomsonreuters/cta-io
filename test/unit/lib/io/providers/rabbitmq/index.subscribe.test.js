@@ -1,8 +1,9 @@
 'use strict';
 
-const o = require('../../../../common');
-describe('rabbitmq consume', function() {
-  it('consume with ack set to resolve', function (done) {
+const o = require('../../../../../common');
+
+describe('rabbitmq subscribe', function() {
+  it('subscribe with ack set to resolve', function (done) {
     return o.co(function* coroutine() {
       const provider = new o.providers.rabbitmq();
       yield provider.connect();
@@ -13,13 +14,13 @@ describe('rabbitmq consume', function() {
         timestamp: Date.now(),
       };
       const spy = o.sinon.spy();
-      yield provider.consume({
-        queue: queue,
+      yield provider.subscribe({
+        key: queue,
         cb: spy,
         ack: 'resolve',
       });
-      yield provider.produce({
-        queue: queue,
+      yield provider.publish({
+        key: queue,
         json: json,
       });
       setTimeout(function() {
@@ -29,12 +30,12 @@ describe('rabbitmq consume', function() {
         done();
       }, 100);
     })
-      .catch((err) => {
-        done(err);
-      });
+    .catch((err) => {
+      done(err);
+    });
   });
 
-  it('consume with ack set to auto', function (done) {
+  it('subscribe with ack set to auto', function (done) {
     return o.co(function* coroutine() {
       const provider = new o.providers.rabbitmq();
       yield provider.connect();
@@ -52,13 +53,13 @@ describe('rabbitmq consume', function() {
         });
       };
       const _cb = o.sinon.spy(cb);
-      yield provider.consume({
-        queue: queue,
+      yield provider.subscribe({
+        key: queue,
         cb: _cb,
         ack: 'auto',
       });
-      yield provider.produce({
-        queue: queue,
+      yield provider.publish({
+        key: queue,
         json: json,
       });
       setTimeout(function() {
@@ -69,8 +70,8 @@ describe('rabbitmq consume', function() {
         done();
       }, 300);
     })
-      .catch((err) => {
-        done(err);
-      });
+    .catch((err) => {
+      done(err);
+    });
   });
 });

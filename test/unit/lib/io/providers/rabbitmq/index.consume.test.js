@@ -1,9 +1,8 @@
 'use strict';
 
-const o = require('../../../../common');
-
-describe('rabbitmq subscribe', function() {
-  it('subscribe with ack set to resolve', function (done) {
+const o = require('../../../../../common');
+describe('rabbitmq consume', function() {
+  it('consume with ack set to resolve', function (done) {
     return o.co(function* coroutine() {
       const provider = new o.providers.rabbitmq();
       yield provider.connect();
@@ -14,13 +13,13 @@ describe('rabbitmq subscribe', function() {
         timestamp: Date.now(),
       };
       const spy = o.sinon.spy();
-      yield provider.subscribe({
-        key: queue,
+      yield provider.consume({
+        queue: queue,
         cb: spy,
         ack: 'resolve',
       });
-      yield provider.publish({
-        key: queue,
+      yield provider.produce({
+        queue: queue,
         json: json,
       });
       setTimeout(function() {
@@ -35,7 +34,7 @@ describe('rabbitmq subscribe', function() {
     });
   });
 
-  it('subscribe with ack set to auto', function (done) {
+  it('consume with ack set to auto', function (done) {
     return o.co(function* coroutine() {
       const provider = new o.providers.rabbitmq();
       yield provider.connect();
@@ -53,13 +52,13 @@ describe('rabbitmq subscribe', function() {
         });
       };
       const _cb = o.sinon.spy(cb);
-      yield provider.subscribe({
-        key: queue,
+      yield provider.consume({
+        queue: queue,
         cb: _cb,
         ack: 'auto',
       });
-      yield provider.publish({
-        key: queue,
+      yield provider.produce({
+        queue: queue,
         json: json,
       });
       setTimeout(function() {
@@ -70,8 +69,8 @@ describe('rabbitmq subscribe', function() {
         done();
       }, 300);
     })
-    .catch((err) => {
-      done(err);
-    });
+      .catch((err) => {
+        done(err);
+      });
   });
 });
