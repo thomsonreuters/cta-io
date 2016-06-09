@@ -3,9 +3,10 @@
 const IoLib = require('../../lib/io');
 
 const provider = process.argv.slice(2).join() || 'rabbitmq';
-console.log('Using provider "' + provider + '"');
+console.log('Starting UI to subscribe to job results using provider "' + provider + '"');
 
 const io = new IoLib(provider);
+const queue = 'io.sample.output.queue';
 
 function cb(json) {
   return new Promise((resolve) => {
@@ -13,8 +14,8 @@ function cb(json) {
   });
 }
 
-io.subscribe({
-  key: 'test_key',
+io.consume({
+  queue: queue,
   cb: cb,
 }).then(function(response) {
   console.log('response: ', response);

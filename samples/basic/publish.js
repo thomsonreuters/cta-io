@@ -1,7 +1,7 @@
 'use strict';
 
 // publish message
-const IoLib = require('../../lib');
+const IoLib = require('../../lib/io');
 
 const provider = process.argv.slice(2).join() || 'rabbitmq';
 console.log('Using provider "' + provider + '"');
