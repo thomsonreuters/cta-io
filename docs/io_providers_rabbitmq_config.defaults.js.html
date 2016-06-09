@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <title>JSDoc: Home</title>
+    <title>JSDoc: Source: io/providers/rabbitmq/config.defaults.js</title>
 
     <script src="scripts/prettify/prettify.js"> </script>
     <script src="scripts/prettify/lang-css.js"> </script>
@@ -17,40 +17,31 @@
 
 <div id="main">
 
-    <h1 class="page-title">Home</h1>
+    <h1 class="page-title">Source: io/providers/rabbitmq/config.defaults.js</h1>
 
     
 
 
 
     
-
-
-    <h3> </h3>
-
-
-
-
-
-
-
-
-
-
-    
-
-
-
-
     <section>
-        <article><h1>CTA-IO</h1><p>Input/Output Brick &amp; module for CTA Open source projects</p>
-<ul>
-<li><a href="lib/README.md">IO Brick</a></li>
-<li><a href="lib/io/README.md">IO Module</a></li>
-</ul></article>
+        <article>
+            <pre class="prettyprint source linenums"><code>'use strict';
+
+/**
+ * default configuration for RabbitMQ Provider
+ * @type {{url: string}} - RabbitMQ host url
+ */
+
+module.exports = {
+  url: 'amqp://localhost?heartbeat=60',
+  reconnectAfter: 60000,  // 60 * 1000,
+  clearInterval: 3600000, // 60 * 60 * 1000,
+  clearOffset: 86400000,  // 24 * 60 * 60 * 1000,
+};
+</code></pre>
+        </article>
     </section>
-
-
 
 
 

@@ -44,7 +44,7 @@
     <h2>Constructor</h2>
     
 
-    <h4 class="name" id="RabbitMQProvider"><span class="type-signature"></span>new RabbitMQProvider<span class="signature">(params, logger)</span><span class="type-signature"></span></h4>
+    <h4 class="name" id="RabbitMQProvider"><span class="type-signature"></span>new RabbitMQProvider<span class="signature">(config, logger)</span><span class="type-signature"></span></h4>
 
     
 
@@ -87,7 +87,7 @@
 
         <tr>
             
-                <td class="name"><code>params</code></td>
+                <td class="name"><code>config</code></td>
             
 
             <td class="type">
@@ -146,6 +146,75 @@
             
 
             <td class="description last">RabbitMQ host</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>reconnectAfter</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">number</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">delay in ms to reconnect RabbitMQ after disconnection</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>clearInterval</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">number</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">interval in ms to clear old messages that are saved in memory for acknowledgement</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>clearOffset</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">number</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">time offset in ms to clear old messages</td>
         </tr>
 
     
@@ -216,7 +285,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="io_providers_rabbitmq_index.js.html">io/providers/rabbitmq/index.js</a>, <a href="io_providers_rabbitmq_index.js.html#line13">line 13</a>
+        <a href="io_providers_rabbitmq_index.js.html">io/providers/rabbitmq/index.js</a>, <a href="io_providers_rabbitmq_index.js.html#line14">line 14</a>
     </li></ul></dd>
     
 
@@ -365,7 +434,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="io_providers_rabbitmq_index.js.html">io/providers/rabbitmq/index.js</a>, <a href="io_providers_rabbitmq_index.js.html#line468">line 468</a>
+        <a href="io_providers_rabbitmq_index.js.html">io/providers/rabbitmq/index.js</a>, <a href="io_providers_rabbitmq_index.js.html#line508">line 508</a>
     </li></ul></dd>
     
 
@@ -514,7 +583,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="io_providers_rabbitmq_index.js.html">io/providers/rabbitmq/index.js</a>, <a href="io_providers_rabbitmq_index.js.html#line520">line 520</a>
+        <a href="io_providers_rabbitmq_index.js.html">io/providers/rabbitmq/index.js</a>, <a href="io_providers_rabbitmq_index.js.html#line560">line 560</a>
     </li></ul></dd>
     
 
@@ -667,7 +736,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="io_providers_rabbitmq_index.js.html">io/providers/rabbitmq/index.js</a>, <a href="io_providers_rabbitmq_index.js.html#line172">line 172</a>
+        <a href="io_providers_rabbitmq_index.js.html">io/providers/rabbitmq/index.js</a>, <a href="io_providers_rabbitmq_index.js.html#line210">line 210</a>
     </li></ul></dd>
     
 
@@ -911,7 +980,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="io_providers_rabbitmq_index.js.html">io/providers/rabbitmq/index.js</a>, <a href="io_providers_rabbitmq_index.js.html#line298">line 298</a>
+        <a href="io_providers_rabbitmq_index.js.html">io/providers/rabbitmq/index.js</a>, <a href="io_providers_rabbitmq_index.js.html#line338">line 338</a>
     </li></ul></dd>
     
 
@@ -1136,7 +1205,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="io_providers_rabbitmq_index.js.html">io/providers/rabbitmq/index.js</a>, <a href="io_providers_rabbitmq_index.js.html#line255">line 255</a>
+        <a href="io_providers_rabbitmq_index.js.html">io/providers/rabbitmq/index.js</a>, <a href="io_providers_rabbitmq_index.js.html#line293">line 293</a>
     </li></ul></dd>
     
 
@@ -1240,7 +1309,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="io_providers_rabbitmq_index.js.html">io/providers/rabbitmq/index.js</a>, <a href="io_providers_rabbitmq_index.js.html#line163">line 163</a>
+        <a href="io_providers_rabbitmq_index.js.html">io/providers/rabbitmq/index.js</a>, <a href="io_providers_rabbitmq_index.js.html#line201">line 201</a>
     </li></ul></dd>
     
 
@@ -1442,7 +1511,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="io_providers_rabbitmq_index.js.html">io/providers/rabbitmq/index.js</a>, <a href="io_providers_rabbitmq_index.js.html#line493">line 493</a>
+        <a href="io_providers_rabbitmq_index.js.html">io/providers/rabbitmq/index.js</a>, <a href="io_providers_rabbitmq_index.js.html#line533">line 533</a>
     </li></ul></dd>
     
 
@@ -1595,7 +1664,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="io_providers_rabbitmq_index.js.html">io/providers/rabbitmq/index.js</a>, <a href="io_providers_rabbitmq_index.js.html#line480">line 480</a>
+        <a href="io_providers_rabbitmq_index.js.html">io/providers/rabbitmq/index.js</a>, <a href="io_providers_rabbitmq_index.js.html#line520">line 520</a>
     </li></ul></dd>
     
 
@@ -1816,7 +1885,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="io_providers_rabbitmq_index.js.html">io/providers/rabbitmq/index.js</a>, <a href="io_providers_rabbitmq_index.js.html#line222">line 222</a>
+        <a href="io_providers_rabbitmq_index.js.html">io/providers/rabbitmq/index.js</a>, <a href="io_providers_rabbitmq_index.js.html#line260">line 260</a>
     </li></ul></dd>
     
 
@@ -2041,7 +2110,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="io_providers_rabbitmq_index.js.html">io/providers/rabbitmq/index.js</a>, <a href="io_providers_rabbitmq_index.js.html#line360">line 360</a>
+        <a href="io_providers_rabbitmq_index.js.html">io/providers/rabbitmq/index.js</a>, <a href="io_providers_rabbitmq_index.js.html#line400">line 400</a>
     </li></ul></dd>
     
 
@@ -2289,7 +2358,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="io_providers_rabbitmq_index.js.html">io/providers/rabbitmq/index.js</a>, <a href="io_providers_rabbitmq_index.js.html#line399">line 399</a>
+        <a href="io_providers_rabbitmq_index.js.html">io/providers/rabbitmq/index.js</a>, <a href="io_providers_rabbitmq_index.js.html#line439">line 439</a>
     </li></ul></dd>
     
 
@@ -2353,13 +2422,13 @@
 </div>
 
 <nav>
-    <h2><a href="index.html">Home</a></h2><h3>Classes</h3><ul><li><a href="global.html#Io">Io</a></li><li><a href="RabbitMQProvider.html">RabbitMQProvider</a></li></ul><h3><a href="global.html">Global</a></h3>
+    <h2><a href="index.html">Home</a></h2><h3>Classes</h3><ul><li><a href="Io.html">Io</a></li><li><a href="RabbitMQProvider.html">RabbitMQProvider</a></li></ul>
 </nav>
 
 <br class="clear">
 
 <footer>
-    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.4.0</a> on Wed Jun 08 2016 11:54:55 GMT+0200 (Romance Daylight Time)
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.4.0</a> on Thu Jun 09 2016 02:36:01 GMT+0200 (Romance Daylight Time)
 </footer>
 
 <script> prettyPrint(); </script>

@@ -33,6 +33,7 @@ const shortid = require('shortid');
 const _ = require('lodash');
 const defaultLogger = require('cta-logger');
 const tools = require('cta-tools');
+const defaults = require('./config.defaults');
 
 /**
  * RabbitMQProvider class
@@ -41,29 +42,47 @@ const tools = require('cta-tools');
 class RabbitMQProvider {
   /**
    * Create a new RabbitMQProvider instance
-   * @param {object} params - RabbitMQ configuration
-   * @param {string} params.url - RabbitMQ host
+   * @param {object} config - RabbitMQ configuration
+   * @param {string} config.url - RabbitMQ host
+   * @param {number} config.reconnectAfter - delay in ms to reconnect RabbitMQ after disconnection
+   * @param {number} config.clearInterval - interval in ms to clear old messages that are saved in memory for acknowledgement
+   * @param {number} config.clearOffset - time offset in ms to clear old messages
    * @param {object} logger - logger instance
    */
-  constructor(params, logger) {
+  constructor(config, logger) {
     const that = this;
     that.logger = logger || defaultLogger();
-    that.options = tools.validate(params, {
+    that.config = tools.validate(config, {
       url: {
         optional: true,
         type: 'string',
-        defaultTo: 'amqp://localhost?heartbeat=60',
+        defaultTo: defaults.url,
+      },
+      reconnectAfter: {
+        optional: true,
+        type: 'number',
+        defaultTo: defaults.reconnectAfter,
+      },
+      clearInterval: {
+        optional: true,
+        type: 'number',
+        defaultTo: defaults.clearInterval,
+      },
+      clearOffset: {
+        optional: true,
+        type: 'number',
+        defaultTo: defaults.clearOffset,
       },
     }).output;
 
     that.reconnecting = false;
     that.interval = null;
-    that.reconnectAfter = 10000;
     that.connection = null;
     that.connected = false;
     that.channel = null;
     that.consumers = {};
     that.messages = {};
+    that._houseKeeping();
   }
 
   /**
@@ -85,25 +104,44 @@ class RabbitMQProvider {
   }
 
   /**
-   * Manage a consumed message, transform it to json, generate an id if necessary, save the message for acknowledgement
+   * Process a consumed message:
+   * - transform the msg buffer into json
+   * - generate an id if necessary
+   * - save the message for future acknowledgement if necessary
    * @param {object} msg - consumed message
-   * @param {string} ackMode - ack mode
+   * @param {boolean} save - weather to save the message for future acknowledgement
    * @returns {object}
    * @private
    */
-  _processMsg(msg, ackMode) {
+  _processMsg(msg, save) {
     const that = this;
     const json = that._bufferToJSON(msg.content);
     if (!json.id) {
       json.id = shortid.generate();
     }
-    if (ackMode !== 'auto' &amp;&amp; ackMode !== 'resolve') {
+    if (save === true) {
       that.messages[json.id] = {
         msg: msg,
         timestamp: Date.now(),
       };
     }
     return json;
+  }
+
+  /**
+   * Housekeeping: remove old messages from memory that have not been acknowledged
+   * @private
+   */
+  _houseKeeping() {
+    const that = this;
+    setInterval(function() {
+      Object.keys(that.messages).forEach(function(id) {
+        const offset = Date.now() - that.config.clearOffset;
+        if (that.messages[id].timestamp &lt; offset) {
+          delete that.messages[id];
+        }
+      });
+    }, that.config.clearInterval);
   }
 
   /**
@@ -155,7 +193,7 @@ class RabbitMQProvider {
           that.logger.info('RabbitMQ provider has been reconnected.');
           that._reconnectConsumers();
         });
-    }, that.reconnectAfter);
+    }, that.config.reconnectAfter);
   }
 
   /**
@@ -204,13 +242,13 @@ class RabbitMQProvider {
         return resolve(that.channel);
       }
       that.logger.debug('Connecting to rabbitMQ...');
-      amqp.connect(that.options.url, function(connErr, connection) {
+      amqp.connect(that.config.url, function(connErr, connection) {
         if (connErr) {
           that.logger.debug('RabbitMQ connection error');
           that._reconnect();
           return reject(connErr);
         }
-        that.logger.debug('Connected to rabbitMQ');
+        that.logger.debug('Connected to rabbitMQ, host: ', connection.connection.stream._host);
         connection.on('close', function() {
           that.logger.debug('RabbitMQ connection close event');
           that.connected = false;
@@ -301,8 +339,10 @@ class RabbitMQProvider {
           let json = {};
           if (!msg) {
             json = null;
+            that.logger.debug('get: no more messages in queue "%s"', vp.queue);
           } else {
             json = that._processMsg(msg, (vp.ack !== 'auto'));
+            that.logger.debug('get: received new message, ', json);
           }
           resolve({
             json: json,
@@ -331,7 +371,7 @@ class RabbitMQProvider {
       ack: {
         optional: true,
         type: 'string',
-        defaultTo: '',
+        defaultTo: 'resolve',
       },
     };
     return that._exec(params, pattern, (vp) => {
@@ -432,7 +472,7 @@ class RabbitMQProvider {
       ack: {
         optional: true,
         type: 'string',
-        defaultTo: '',
+        defaultTo: 'resolve',
       },
     };
     return that._exec(params, pattern, (vp) => {
@@ -575,13 +615,13 @@ exports = module.exports = RabbitMQProvider;
 </div>
 
 <nav>
-    <h2><a href="index.html">Home</a></h2><h3>Classes</h3><ul><li><a href="global.html#Io">Io</a></li><li><a href="RabbitMQProvider.html">RabbitMQProvider</a></li></ul><h3><a href="global.html">Global</a></h3>
+    <h2><a href="index.html">Home</a></h2><h3>Classes</h3><ul><li><a href="Io.html">Io</a></li><li><a href="RabbitMQProvider.html">RabbitMQProvider</a></li></ul>
 </nav>
 
 <br class="clear">
 
 <footer>
-    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.4.0</a> on Wed Jun 08 2016 11:54:55 GMT+0200 (Romance Daylight Time)
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.4.0</a> on Thu Jun 09 2016 02:36:01 GMT+0200 (Romance Daylight Time)
 </footer>
 
 <script> prettyPrint(); </script>
