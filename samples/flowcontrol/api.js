@@ -1,6 +1,7 @@
 'use strict';
 
 const IoLib = require('../../lib/io');
+const shortid = require('shortid');
 
 const provider = process.argv.slice(2).join() || 'rabbitmq';
 console.log('Starting API to produce a job using provider "' + provider + '"');
@@ -10,9 +11,9 @@ function generate() {
 }
 
 const io = new IoLib(provider);
-const queue = 'io.sample.input.queue';
+const queue = 'input.queue';
 const execution = {
-  id: '001',
+  id: shortid.generate(),
   nature: {
     type: 'execution',
     quality: 'commandline',

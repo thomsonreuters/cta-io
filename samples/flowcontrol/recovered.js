@@ -6,7 +6,7 @@ const provider = process.argv.slice(2).join() || 'rabbitmq';
 console.log('Starting UI to subscribe to job results using provider "' + provider + '"');
 
 const io = new IoLib(provider);
-const queue = 'output.queue';
+const queue = 'output.failed';
 
 function cb(json) {
   return new Promise((resolve) => {

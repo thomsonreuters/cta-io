@@ -1,29 +1,20 @@
 'use strict';
-
+const os = require('os');
+const path = require('path');
 const config = {
   'bricks': [
 //------------------------------------------------------------------------
     {
-      'name': 'io',
-      'module': 'cta-io',
-      'properties': {
-        'inputQueue': 'receiver.queue',
-        'outputQueue': 'io.sample.output.queue',
-        'provider': {
-          'name': 'rabbitmq',
-          'options': {
-            'url': 'amqp://localhost',
-          },
-        },
-        start: {
-          method: 'consume',
-          params: {
-            queue: 'io.sample.input.queue',
-            ack: 'auto',
-          },
+      name: 'receiver',
+      module: 'cta-io',
+      properties: {
+        providerName: 'rabbitmq',
+        parameters: {
+          url: 'amqp://localhost',
+          inputQueue: 'input.queue',
         },
       },
-      'publish': [
+      publish: [
         {
           'topic': 'topics.com',
           'data': [{
@@ -34,16 +25,27 @@ const config = {
           }],
         },
       ],
-      'subscribe': [
+    },
+//------------------------------------------------------------------------
+    {
+      name: 'broker',
+      module: '../../cta-io/samples/flowcontrol/broker.js',
+      properties: {},
+      subscribe: [
+        {
+          'topic': 'topics.com',
+          'data': [{
+            'nature': {
+              'type': 'execution',
+              'quality': 'commandline',
+            },
+          }],
+        },
+      ],
+      publish: [
         {
           'topic': 'topics.com',
           'data': [
-            {
-              'nature': {
-                'type': 'execution',
-                'quality': 'acknowledge',
-              },
-            },
             {
               'nature': {
                 'type': 'execution',
@@ -56,40 +58,139 @@ const config = {
     },
 //------------------------------------------------------------------------
     {
-      'name': 'broker',
-      'module': '../../cta-io/samples/flowcontrol/broker.js',
-      'properties': {},
-      'subscribe': [
+      name: 'sender',
+      module: 'cta-io',
+      properties: {
+        providerName: 'rabbitmq',
+        parameters: {
+          url: 'amqp://localhost',
+          outputQueue: 'output.queue',
+        },
+      },
+      subscribe: [
         {
-          'topic': 'topics.com',
-          'data': [{
-            'nature': {
-              'type': 'execution',
-              'quality': 'commandline',
+          topic: 'topics.com',
+          data: [
+            {
+              nature: {
+                type: 'execution',
+                quality: 'result',
+              },
             },
-          }],
+          ],
         },
       ],
-      'publish': [
+      publish: [
         {
-          'topic': 'topics.com',
-          'data': [
+          topic: 'topics.com',
+          data: [
             {
-              'nature': {
-                'type': 'execution',
-                'quality': 'acknowledge',
+              nature: {
+                type: 'teststatus',
+                quality: 'save',
               },
             },
             {
-              'nature': {
-                'type': 'execution',
-                'quality': 'result',
+              nature: {
+                type: 'teststatus',
+                quality: 'read',
               },
             },
           ],
         },
       ],
     },
+//------------------------------------------------------------------------
+    {
+      name: 'silo',
+      module: 'cta-silo',
+      properties: {
+        provider: {
+          name: 'nedb',
+          options: {
+            filename: os.tmpDir() + path.sep + 'silo.db',
+          },
+        },
+      },
+      publish: [
+        {
+          topic: 'deferred.results',
+          data: [
+            {
+              nature: {
+                type: 'execution',
+                quality: 'result',
+              },
+            },
+          ],
+        },
+      ],
+      subscribe: [
+        {
+          topic: 'topics.com',
+          data: [
+            {
+              nature: {
+                type: 'teststatus',
+                quality: 'save',
+              },
+            },
+            {
+              nature: {
+                type: 'teststatus',
+                quality: 'read',
+              },
+            },
+          ],
+        },
+      ],
+    },
+//------------------------------------------------------------------------
+    {
+      name: 'recovery',
+      module: 'cta-io',
+      properties: {
+        providerName: 'rabbitmq',
+        parameters: {
+          url: 'amqp://localhost',
+          outputQueue: 'output.failed',
+          reconnectAfter: 5000,
+        },
+      },
+      subscribe: [
+        {
+          topic: 'deferred.results',
+          data: [
+            {
+              nature: {
+                type: 'execution',
+                quality: 'result',
+              },
+            },
+          ],
+        },
+      ],
+      publish: [
+        {
+          topic: 'topics.com',
+          data: [
+            {
+              nature: {
+                type: 'teststatus',
+                quality: 'save',
+              },
+            },
+            {
+              nature: {
+                type: 'teststatus',
+                quality: 'read',
+              },
+            },
+          ],
+        },
+      ],
+    },
+//------------------------------------------------------------------------
   ],
 };
 

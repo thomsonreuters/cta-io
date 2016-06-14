@@ -1,7 +1,7 @@
 'use strict';
 
 const Brick = require('cta-brick');
-const co = require('co');
+const shortid = require('shortid');
 
 class Broker extends Brick {
   constructor(cementHelper, config) {
@@ -14,23 +14,31 @@ class Broker extends Brick {
 
   process(context) {
     const that = this;
-    return co(function* processCo() {
+    try {
       if (context.data.nature.type === 'execution' && context.data.nature.quality === 'commandline') {
         const result = context.data.payload.x * context.data.payload.y;
-        that.cementHelper.createContext({
-          'nature': {
-            'type': 'execution',
-            'quality': 'result',
+        const data = {
+          id: shortid.generate(),
+          nature: {
+            type: 'execution',
+            quality: 'result',
           },
           payload: {
             operation: `${context.data.payload.x} * ${context.data.payload.y}`,
             result: result,
           },
-        }).publish();
+        };
+        // simulate job slowness
+        setTimeout(function() {
+          that.cementHelper.createContext(data).publish();
+          context.emit('done', that.name, result);
+        }, 5000);
       }
-    });
+    } catch (err) {
+      context.emit('reject', that.name, err);
+      context.emit('error', that.name, err);
+    }
   }
 }
 
 module.exports = Broker;
-
