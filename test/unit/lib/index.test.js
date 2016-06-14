@@ -2,37 +2,33 @@
 
 const o = require('../../common');
 const Context = require('events').EventEmitter;
+let brick;
 
 describe('Io Brick', function() {
-  it('constructor', function() {
-    const brick = new o.IoBrick({}, {
+
+  beforeEach(function() {
+    const cementHelper = {
+      createContext: function() {
+        return {
+          publish: function() {
+          },
+        };
+      },
+    };
+    brick = new o.IoBrick(cementHelper, {
       name: 'cta-io',
       properties: {
-        provider: {
-          name: 'rabbitmq',
+        providerName: 'rabbitmq',
+        parameters: {
+          inputQueue: 'queue',
+          newInstance: true,
         },
       },
     });
-    o.assert.instanceOf(brick.io, o.providers.rabbitmq);
   });
 
-  it('should call provided method on start property', function(done) {
+  it('should start subscribe method when inputQueue is provided', function(done) {
     return o.co(function* coroutine() {
-      const brick = new o.IoBrick({}, {
-        name: 'cta-io',
-        properties: {
-          provider: {
-            name: 'rabbitmq',
-          },
-          start: {
-            method: 'subscribe',
-            params: {
-              queue: 'queue',
-              cb: function() {},
-            },
-          },
-        },
-      });
       const subscribe = o.sinon.spy(brick.io, 'subscribe');
       yield brick.start();
       subscribe.restore();
@@ -46,14 +42,6 @@ describe('Io Brick', function() {
 
   it('should process with ack', function(done) {
     return o.co(function* coroutine() {
-      const brick = new o.IoBrick({}, {
-        name: 'cta-io',
-        properties: {
-          provider: {
-            name: 'rabbitmq',
-          },
-        },
-      });
       const ack = o.sinon.stub(brick.io, 'ack', function() {
         return Promise.resolve();
       });
@@ -72,30 +60,13 @@ describe('Io Brick', function() {
       o.sinon.assert.calledOnce(ack);
       done();
     })
-      .catch((err) => {
-        done(err);
-      });
+    .catch((err) => {
+      done(err);
+    });
   });
 
   it('should process with get', function(done) {
     return o.co(function* coroutine() {
-      const cementHelper = {
-        createContext: function(json) {
-          return {
-            publish: function() {
-
-            },
-          };
-        },
-      };
-      const brick = new o.IoBrick(cementHelper, {
-        name: 'cta-io',
-        properties: {
-          provider: {
-            name: 'rabbitmq',
-          },
-        },
-      });
       const _get = o.sinon.stub(brick.io, 'get', function() {
         return Promise.resolve({
           result: {
@@ -120,21 +91,13 @@ describe('Io Brick', function() {
       o.sinon.assert.calledWith(_get, 'abc');
       done();
     })
-      .catch((err) => {
-        done(err);
-      });
+    .catch((err) => {
+      done(err);
+    });
   });
 
   it('should process with produce', function(done) {
     return o.co(function* coroutine() {
-      const brick = new o.IoBrick({}, {
-        name: 'cta-io',
-        properties: {
-          provider: {
-            name: 'rabbitmq',
-          },
-        },
-      });
       const _produce = o.sinon.stub(brick.io, 'produce', function() {
         return Promise.resolve({
           result: {},

@@ -2,15 +2,16 @@
 
 const o = require('../../../../../common');
 
-describe('rabbitmq common', function() {
+describe('rabbitmq provider common tests', function() {
   it('should set default params', function() {
     const defaults = require('../../../../../../lib/io/providers/rabbitmq/config.defaults');
-    const io = new o.providers.rabbitmq();
-    o.assert.deepEqual(io.config, {
+    const provider = new o.RmqProvider();
+    o.assert.deepEqual(provider.config, {
       url: defaults.url,
       reconnectAfter: defaults.reconnectAfter,
       clearInterval: defaults.clearInterval,
       clearOffset: defaults.clearOffset,
+      newInstance: false,
     });
   });
 
@@ -20,32 +21,33 @@ describe('rabbitmq common', function() {
       reconnectAfter: 10 * 1000,
       clearInterval: 60 * 60 * 1000,
       clearOffset: 2 * 60 * 60 * 1000,
+      newInstance: true,
     };
-    const io = new o.providers.rabbitmq(config);
-    o.assert.deepEqual(io.config, config);
+    const provider = new o.RmqProvider(config);
+    o.assert.deepEqual(provider.config, config);
   });
 
   it('processMsg', function() {
-    const io = new o.providers.rabbitmq();
+    const provider = new o.RmqProvider({newInstance: true});
     let msg = {
       content: new Buffer(JSON.stringify({foo: 'bar'})),
     };
-    let json = io._processMsg(msg, true);
+    let json = provider._processMsg(msg, true);
     o.assert.property(json, 'id');
-    o.assert.property(io.messages, json.id);
-    o.assert.property(io.messages[json.id], 'msg');
-    o.assert.property(io.messages[json.id], 'timestamp');
+    o.assert.property(provider.messages, json.id);
+    o.assert.property(provider.messages[json.id], 'msg');
+    o.assert.property(provider.messages[json.id], 'timestamp');
     msg = {
       content: new Buffer(JSON.stringify({id: 'def'})),
     };
-    json = io._processMsg(msg);
+    json = provider._processMsg(msg);
     o.assert.property(json, 'id');
-    o.assert.notProperty(io.messages, json.id);
+    o.assert.notProperty(provider.messages, json.id);
   });
 
   it('should connect when there is no connection', function(done) {
     const connect = o.sinon.spy(o.amqp, 'connect');
-    const provider = new o.providers.rabbitmq();
+    const provider = new o.RmqProvider({newInstance: true});
     o.assert(!provider.channel);
     provider.connect()
       .then(function() {
@@ -62,7 +64,7 @@ describe('rabbitmq common', function() {
 
   it('should not connect when there is already a connection', function(done) {
     const connect = o.sinon.spy(o.amqp, 'connect');
-    const provider = new o.providers.rabbitmq();
+    const provider = new o.RmqProvider({newInstance: true});
     o.assert(!provider.channel);
     provider.connect()
       .then(function() {
@@ -84,7 +86,7 @@ describe('rabbitmq common', function() {
   });
 
   it('should reconnect on disconnection', function(done) {
-    const provider = new o.providers.rabbitmq();
+    const provider = new o.RmqProvider({newInstance: true});
     const _reconnect = o.sinon.spy(provider, '_reconnect');
     const connect = o.sinon.spy(provider, 'connect');
     const _reconnectConsumers = o.sinon.spy(provider, '_reconnectConsumers');
@@ -111,7 +113,7 @@ describe('rabbitmq common', function() {
   });
 
   it('healthCheck', function(done) {
-    const provider = new o.providers.rabbitmq();
+    const provider = new o.RmqProvider({newInstance: true});
     o.assert.strictEqual(provider.healthCheck(), false);
     provider.connect()
       .then(function() {
@@ -126,7 +128,7 @@ describe('rabbitmq common', function() {
 
   it('ack', function(done) {
     return o.co(function* coroutine() {
-      const provider = new o.providers.rabbitmq();
+      const provider = new o.RmqProvider({newInstance: true});
       yield provider.connect();
       const ack = o.sinon.stub(provider.channel, 'ack');
       provider.messages.abc = {
@@ -143,7 +145,7 @@ describe('rabbitmq common', function() {
 
   it('nack', function(done) {
     return o.co(function* coroutine() {
-      const provider = new o.providers.rabbitmq();
+      const provider = new o.RmqProvider({newInstance: true});
       yield provider.connect();
       const nack = o.sinon.stub(provider.channel, 'nack');
       provider.messages.abc = {
@@ -159,54 +161,52 @@ describe('rabbitmq common', function() {
   });
 
   it('houseKeeping', function(done) {
-    const io = new o.providers.rabbitmq({
-      clearInterval: 100,
-    });
+    const provider = new o.RmqProvider({newInstance: true, clearInterval: 100});
     const now = Date.now();
-    io.messages = {
+    provider.messages = {
       a: {
         msg: {},
-        timestamp: now - io.config.clearOffset,
+        timestamp: now - provider.config.clearOffset,
       },
       b: {
         msg: {},
         timestamp: now,
       },
     };
-    io._houseKeeping();
+    provider._houseKeeping();
     setTimeout(function() {
-      o.assert.sameMembers(Object.keys(io.messages), ['b']);
+      o.assert.sameMembers(Object.keys(provider.messages), ['b']);
       done();
-    }, io.config.clearInterval);
+    }, provider.config.clearInterval);
   });
 
-  it('should return queue information', function (done) {
+  it('should return queue information', function(done) {
     return o.co(function* coroutine() {
-      const io = new o.providers.rabbitmq();
-      yield io.connect();
-      const assertQueue = o.sinon.spy(io.channel, 'assertQueue');
+      const provider = new o.RmqProvider({newInstance: true});
+      yield provider.connect();
+      const assertQueue = o.sinon.spy(provider.channel, 'assertQueue');
       const queue = o.shortid.generate();
-      yield io.info(queue);
+      yield provider.info(queue);
       o.sinon.assert.calledOnce(assertQueue);
       done();
     })
-      .catch((err) => {
-        done(err);
-      });
+    .catch((err) => {
+      done(err);
+    });
   });
 
-  it('should cancel a consumer', function (done) {
+  it('should cancel a consumer', function(done) {
     return o.co(function* coroutine() {
-      const io = new o.providers.rabbitmq();
-      yield io.connect();
-      const cancel = o.sinon.spy(io.channel, 'cancel');
+      const provider = new o.RmqProvider({newInstance: true});
+      yield provider.connect();
+      const cancel = o.sinon.spy(provider.channel, 'cancel');
       const queue = o.shortid.generate();
-      yield io.cancel('abc');
+      yield provider.cancel('abc');
       o.sinon.assert.calledOnce(cancel);
       done();
     })
-      .catch((err) => {
-        done(err);
-      });
+    .catch((err) => {
+      done(err);
+    });
   });
 });

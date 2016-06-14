@@ -2,9 +2,9 @@
 
 const o = require('../../../../../common');
 describe('rabbitmq consume', function() {
-  it('consume with ack set to resolve', function (done) {
+  it('consume with ack set to resolve', function(done) {
     return o.co(function* coroutine() {
-      const provider = new o.providers.rabbitmq();
+      const provider = new o.RmqProvider({newInstance: true});
       yield provider.connect();
       const ack = o.sinon.stub(provider.channel, 'ack');
       const queue = o.shortid.generate();
@@ -34,9 +34,9 @@ describe('rabbitmq consume', function() {
     });
   });
 
-  it('consume with ack set to auto', function (done) {
+  it('consume with ack set to auto', function(done) {
     return o.co(function* coroutine() {
-      const provider = new o.providers.rabbitmq();
+      const provider = new o.RmqProvider({newInstance: true});
       yield provider.connect();
       const _ack = o.sinon.stub(provider.channel, 'ack');
       const queue = o.shortid.generate();
@@ -44,7 +44,7 @@ describe('rabbitmq consume', function() {
         id: '01',
         timestamp: Date.now(),
       };
-      const cb = function (doc) {
+      const cb = function(doc) {
         return new Promise((resolve) => {
           setTimeout(function() {
             resolve(doc);

@@ -8,6 +8,7 @@ module.exports = {
   co: require('co'),
   Io: require('../lib/io'),
   providers: require('../lib/io/providers'),
+  RmqProvider: require('../lib/io/providers/rabbitmq'),
   IoBrick: require('../lib'),
   json: function() {
     return {
