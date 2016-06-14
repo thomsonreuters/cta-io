@@ -5,7 +5,7 @@ const config = {
   'bricks': [
 //------------------------------------------------------------------------
     {
-      name: 'receiver',
+      name: 'Receiver',
       module: 'cta-io',
       properties: {
         providerName: 'rabbitmq',
@@ -28,7 +28,7 @@ const config = {
     },
 //------------------------------------------------------------------------
     {
-      name: 'broker',
+      name: 'Broker',
       module: '../../cta-io/samples/flowcontrol/broker.js',
       properties: {},
       subscribe: [
@@ -58,7 +58,7 @@ const config = {
     },
 //------------------------------------------------------------------------
     {
-      name: 'sender',
+      name: 'MainSender',
       module: 'cta-io',
       properties: {
         providerName: 'rabbitmq',
@@ -102,7 +102,7 @@ const config = {
     },
 //------------------------------------------------------------------------
     {
-      name: 'silo',
+      name: 'Silo',
       module: 'cta-silo',
       properties: {
         provider: {
@@ -114,7 +114,7 @@ const config = {
       },
       publish: [
         {
-          topic: 'deferred.results',
+          topic: 'deferred.com',
           data: [
             {
               nature: {
@@ -147,19 +147,18 @@ const config = {
     },
 //------------------------------------------------------------------------
     {
-      name: 'recovery',
+      name: 'DeferredSender',
       module: 'cta-io',
       properties: {
         providerName: 'rabbitmq',
         parameters: {
           url: 'amqp://localhost',
-          outputQueue: 'output.failed',
-          reconnectAfter: 5000,
+          outputQueue: 'output.deferred',
         },
       },
       subscribe: [
         {
-          topic: 'deferred.results',
+          topic: 'deferred.com',
           data: [
             {
               nature: {
