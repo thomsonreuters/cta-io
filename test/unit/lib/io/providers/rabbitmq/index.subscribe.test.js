@@ -15,12 +15,12 @@ describe('rabbitmq subscribe', function() {
       };
       const spy = o.sinon.spy();
       yield provider.subscribe({
-        key: queue,
+        queue: queue,
         cb: spy,
         ack: 'resolve',
       });
       yield provider.publish({
-        key: queue,
+        queue: queue,
         json: json,
       });
       setTimeout(function() {
@@ -54,12 +54,12 @@ describe('rabbitmq subscribe', function() {
       };
       const _cb = o.sinon.spy(cb);
       yield provider.subscribe({
-        key: queue,
+        queue: queue,
         cb: _cb,
         ack: 'auto',
       });
       yield provider.publish({
-        key: queue,
+        queue: queue,
         json: json,
       });
       setTimeout(function() {

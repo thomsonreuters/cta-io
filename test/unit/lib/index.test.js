@@ -27,8 +27,8 @@ describe('Io Brick', function() {
           start: {
             method: 'subscribe',
             params: {
-              key: 'key',
-              cb: function(){},
+              queue: 'queue',
+              cb: function() {},
             },
           },
         },
