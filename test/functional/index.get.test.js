@@ -8,7 +8,7 @@ const global = {
   key2: o.shortid.generate(),
 };
 
-describe('index / get', function() {
+describe('functional: index / get', function() {
   Object.keys(o.providers).forEach(function(provider) {
     context(provider + ' provider', function() {
       const io = new o.Io(provider);

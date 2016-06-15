@@ -4,7 +4,7 @@ const o = require('../../common');
 const Context = require('events').EventEmitter;
 let brick;
 
-describe('Io Brick', function() {
+describe('unit: Io Brick', function() {
 
   beforeEach(function() {
     const cementHelper = {

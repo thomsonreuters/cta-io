@@ -2,7 +2,7 @@
 
 const o = require('../../../../../common');
 
-describe('rabbitmq subscribe', function() {
+describe('unit: rabbitmq subscribe', function() {
   it('subscribe with ack set to resolve', function(done) {
     return o.co(function* coroutine() {
       const provider = new o.RmqProvider({newInstance: true});

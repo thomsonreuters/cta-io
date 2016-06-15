@@ -1,7 +1,7 @@
 'use strict';
 
 const o = require('../../../../../common');
-describe('rabbitmq get', function() {
+describe('unit: rabbitmq get', function() {
   it('should get message from queue', function(done) {
     return o.co(function* coroutine() {
       const provider = new o.RmqProvider({newInstance: true});

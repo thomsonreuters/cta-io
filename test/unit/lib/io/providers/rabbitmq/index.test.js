@@ -2,7 +2,7 @@
 
 const o = require('../../../../../common');
 
-describe('rabbitmq provider common tests', function() {
+describe('unit: rabbitmq provider common tests', function() {
   it('should set default params', function() {
     const defaults = require('../../../../../../lib/io/providers/rabbitmq/config.defaults');
     const provider = new o.RmqProvider();

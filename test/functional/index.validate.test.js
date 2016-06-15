@@ -3,7 +3,7 @@
 const o = require('../common');
 const validations = require('./index.validate.testdata.js');
 
-describe('index / validate params', function() {
+describe('functional: index / validate params', function() {
   Object.keys(o.providers).forEach(function(provider) {
     context(provider + ' common params validations', function() {
       Object.keys(validations).forEach(function(method) {

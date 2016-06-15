@@ -3,7 +3,7 @@
 const o = require('../../../../../common');
 let two;
 
-describe('rabbitmq provider singleton', function() {
+describe('unit: rabbitmq provider singleton', function() {
   it('should return a new instance', function() {
     const one = new o.RmqProvider({newInstance: true});
     one.time = Date.now();

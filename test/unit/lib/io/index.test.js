@@ -2,7 +2,7 @@
 
 const o = require('../../../common');
 
-describe('Io Module Constructor', function() {
+describe('unit: Io Module Constructor', function() {
   it('reject if no provider passed', function() {
     try {
       const io = new o.Io();

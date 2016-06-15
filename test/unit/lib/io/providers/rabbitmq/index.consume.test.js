@@ -1,7 +1,7 @@
 'use strict';
 
 const o = require('../../../../../common');
-describe('rabbitmq consume', function() {
+describe('unit: rabbitmq consume', function() {
   it('consume with ack set to resolve', function(done) {
     return o.co(function* coroutine() {
       const provider = new o.RmqProvider({newInstance: true});
