@@ -6,13 +6,10 @@ describe('rabbitmq provider common tests', function() {
   it('should set default params', function() {
     const defaults = require('../../../../../../lib/io/providers/rabbitmq/config.defaults');
     const provider = new o.RmqProvider();
-    o.assert.deepEqual(provider.config, {
-      url: defaults.url,
-      reconnectAfter: defaults.reconnectAfter,
-      clearInterval: defaults.clearInterval,
-      clearOffset: defaults.clearOffset,
-      newInstance: false,
-    });
+    o.assert.strictEqual(provider.config.url, defaults.url);
+    o.assert.strictEqual(provider.config.reconnectAfter, defaults.reconnectAfter);
+    o.assert.strictEqual(provider.config.clearInterval, defaults.clearInterval);
+    o.assert.strictEqual(provider.config.clearOffset, defaults.clearOffset);
   });
 
   it('should set custom params', function() {
