@@ -1,10 +1,12 @@
 'use strict';
 
+const shortid = require('shortid');
+
 module.exports = {
   amqp: require('amqplib/callback_api'),
   assert: require('chai').assert,
   sinon: require('sinon'),
-  shortid: require('shortid'),
+  shortid: shortid,
   co: require('co'),
   Io: require('../lib/io'),
   providers: require('../lib/io/providers'),
