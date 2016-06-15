@@ -5,7 +5,7 @@ describe('rabbitmq get', function() {
   it('should get message from queue', function(done) {
     return o.co(function* coroutine() {
       const provider = new o.RmqProvider({newInstance: true});
-      yield provider.connect();
+      yield provider._connect();
       const queue = o.shortid.generate();
       const json = {
         id: '01',

@@ -46,7 +46,7 @@ describe('rabbitmq provider common tests', function() {
     const connect = o.sinon.spy(o.amqp, 'connect');
     const provider = new o.RmqProvider({newInstance: true});
     o.assert(!provider.channel);
-    provider.connect()
+    provider._connect()
       .then(function() {
         connect.restore();
         o.sinon.assert.calledOnce(connect);
@@ -63,9 +63,9 @@ describe('rabbitmq provider common tests', function() {
     const connect = o.sinon.spy(o.amqp, 'connect');
     const provider = new o.RmqProvider({newInstance: true});
     o.assert(!provider.channel);
-    provider.connect()
+    provider._connect()
       .then(function() {
-        provider.connect()
+        provider._connect()
           .then(function() {
             connect.restore();
             o.sinon.assert.callCount(connect, 1);
@@ -85,10 +85,10 @@ describe('rabbitmq provider common tests', function() {
   it('should reconnect on disconnection', function(done) {
     const provider = new o.RmqProvider({newInstance: true});
     const _reconnect = o.sinon.spy(provider, '_reconnect');
-    const connect = o.sinon.spy(provider, 'connect');
+    const connect = o.sinon.spy(provider, '_connect');
     const _reconnectConsumers = o.sinon.spy(provider, '_reconnectConsumers');
     const clock = o.sinon.useFakeTimers();
-    provider.connect()
+    provider._connect()
       .then(function() {
         provider.connection.emit('close');
         clock.tick(provider.config.reconnectAfter);
@@ -112,7 +112,7 @@ describe('rabbitmq provider common tests', function() {
   it('healthCheck', function(done) {
     const provider = new o.RmqProvider({newInstance: true});
     o.assert.strictEqual(provider.healthCheck(), false);
-    provider.connect()
+    provider._connect()
       .then(function() {
         o.assert.strictEqual(provider.healthCheck(), true);
         done();
@@ -126,7 +126,7 @@ describe('rabbitmq provider common tests', function() {
   it('ack', function(done) {
     return o.co(function* coroutine() {
       const provider = new o.RmqProvider({newInstance: true});
-      yield provider.connect();
+      yield provider._connect();
       const ack = o.sinon.stub(provider.channel, 'ack');
       provider.messages.abc = {
         msg: {a: 1},
@@ -143,7 +143,7 @@ describe('rabbitmq provider common tests', function() {
   it('nack', function(done) {
     return o.co(function* coroutine() {
       const provider = new o.RmqProvider({newInstance: true});
-      yield provider.connect();
+      yield provider._connect();
       const nack = o.sinon.stub(provider.channel, 'nack');
       provider.messages.abc = {
         msg: {a: 1},
@@ -180,7 +180,7 @@ describe('rabbitmq provider common tests', function() {
   it('should return queue information', function(done) {
     return o.co(function* coroutine() {
       const provider = new o.RmqProvider({newInstance: true});
-      yield provider.connect();
+      yield provider._connect();
       const assertQueue = o.sinon.spy(provider.channel, 'assertQueue');
       const queue = o.shortid.generate();
       yield provider.info(queue);
@@ -195,9 +195,8 @@ describe('rabbitmq provider common tests', function() {
   it('should cancel a consumer', function(done) {
     return o.co(function* coroutine() {
       const provider = new o.RmqProvider({newInstance: true});
-      yield provider.connect();
+      yield provider._connect();
       const cancel = o.sinon.spy(provider.channel, 'cancel');
-      const queue = o.shortid.generate();
       yield provider.cancel('abc');
       o.sinon.assert.calledOnce(cancel);
       done();
