@@ -9,33 +9,25 @@ Io Brick can be easily injected into a flowcontrol using a configuration
 {
   bricks: [
     {
-      name: 'io',
+      name: 'Receiver',
       module: 'cta-io',
-      properties: {
-        inputQueue: 'inpout.queue',
-        outputQueue: 'output.queue',
-        provider: {
-          name: 'rabbitmq',
-          options: {
-            url: 'amqp://localhost',
-          },
-        },
-        start: {
-          method: 'consume',
-          params: {
-            queue: 'inpout.queue',
-            ack: 'auto',
-          },
+      properties: {                
+        providerName: 'rabbitmq',
+        parameters: {          
+          url: 'amqp://localhost',
+          inputQueue: 'inpout.queue',          
         },
       },
     ...
 ````
 
 Properties:
-
-* inputQueue: is the name of the default input queue where to read from if none is provided
-* outputQueue: is the name of the default output queue where to write to if none is provided
-* provider: is the configuration of the chosen provider, refer to provider's doc
-* start: handles the name and parameters of the method to launch on application start up, basically it would be a read method, ie. consume or subscribe. See Io Module docs for more information about these methods
+* providerName: the name of the chosen provider. See supported providers in [IO Module](/lib/io/README.md)
+* parameters.inputQueue: is the name of the queue where to read from as soon as the application is initialized.
+  Read methods can be "subscribe" (default) or "consume". Refer to [IO Module](/lib/io/README.md) doc for these methods
+  Received messages are published in the channel according to the publish configuration.
+* parameters.inputMethod: "subscribe" (default) or "consume"
+* parameters.outputQueue: is the name of the default output queue where to write to
+* parameters.url: is the server's url of the chosen provider
 
 You can see a [basic working sample](../samples/README.md) in /samples/flowcontrol

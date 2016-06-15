@@ -1,7 +1,7 @@
 # IO Module
 ------------
 
-Io module is located under folder ./lib/io/
+Io module is located under folder /lib/io/
 
 You should first require it
 
@@ -14,15 +14,6 @@ Then you can chose a provider
 ## IO Module Providers
 
 ### RabbitMQ provider
-
-Default options
-
-````javascript
-const IoLib = require('./lib/io');
-const provider = new IoLib('rabbitmq');
-````
-
-Custom options
 
 ````javascript
 const IoLib = require('./lib/io');
