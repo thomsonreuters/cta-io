@@ -50,7 +50,7 @@ describe('unit: rabbitmq provider common tests', function() {
       .then(function() {
         connect.restore();
         o.sinon.assert.calledOnce(connect);
-        o.assert(provider.connection);
+        o.assert(provider.connected);
         done();
       })
       .catch(function(err) {
@@ -88,9 +88,9 @@ describe('unit: rabbitmq provider common tests', function() {
     const connect = o.sinon.spy(provider, '_connect');
     const _reconnectConsumers = o.sinon.spy(provider, '_reconnectConsumers');
     const clock = o.sinon.useFakeTimers();
-    provider._connect()
-      .then(function() {
-        provider.connection.emit('close');
+    provider._connect(true)
+      .then(function(connection) {
+        connection.emit('close');
         clock.tick(provider.config.reconnectAfter);
         _reconnect.restore();
         o.sinon.assert.called(_reconnect);
