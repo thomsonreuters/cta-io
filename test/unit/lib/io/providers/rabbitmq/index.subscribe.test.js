@@ -6,7 +6,7 @@ describe('unit: rabbitmq subscribe', function() {
   it('subscribe with ack set to resolve', function(done) {
     return o.co(function* coroutine() {
       const provider = new o.RmqProvider({newInstance: true});
-      yield provider._connect();
+      yield provider._init();
       const ack = o.sinon.stub(provider.channel, 'ack');
       const queue = o.shortid.generate();
       const json = {
@@ -38,7 +38,7 @@ describe('unit: rabbitmq subscribe', function() {
   it('subscribe with ack set to auto', function(done) {
     return o.co(function* coroutine() {
       const provider = new o.RmqProvider({newInstance: true});
-      yield provider._connect();
+      yield provider._init();
       const _ack = o.sinon.stub(provider.channel, 'ack');
       const queue = o.shortid.generate();
       const json = {
