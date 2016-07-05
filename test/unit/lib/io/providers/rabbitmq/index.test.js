@@ -152,7 +152,7 @@ describe('unit: rabbitmq provider common tests', function() {
       provider.messages.abc = {
         msg: {a: 1},
       };
-      yield provider.nack('abc');
+      yield provider.nack({id: 'abc'});
       o.sinon.assert.calledWith(nack, {a: 1});
       done();
     })

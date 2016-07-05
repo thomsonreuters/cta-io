@@ -8,6 +8,7 @@ module.exports = {
   sinon: require('sinon'),
   shortid: shortid,
   co: require('co'),
+  sleep: require('co-sleep'),
   Io: require('../lib/io'),
   providers: require('../lib/io/providers'),
   RmqProvider: require('../lib/io/providers/rabbitmq'),
