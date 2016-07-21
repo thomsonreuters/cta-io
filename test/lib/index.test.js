@@ -1,6 +1,6 @@
 'use strict';
 
-const o = require('../../common');
+const o = require('../common');
 const Context = require('events').EventEmitter;
 let brick;
 
@@ -15,7 +15,7 @@ describe('unit: Io Brick', function() {
         };
       },
     };
-    brick = new o.IoBrick(cementHelper, {
+    brick = new o.lib(cementHelper, {
       name: 'cta-io',
       properties: {
         providerName: 'rabbitmq',

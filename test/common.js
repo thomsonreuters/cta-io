@@ -9,10 +9,7 @@ module.exports = {
   shortid: shortid,
   co: require('co'),
   sleep: require('co-sleep'),
-  Io: require('../lib/io'),
-  providers: require('../lib/io/providers'),
-  RmqProvider: require('../lib/io/providers/rabbitmq'),
-  IoBrick: require('../lib'),
+  lib: require('../lib'),
   json: function() {
     return {
       id: shortid.generate(),
