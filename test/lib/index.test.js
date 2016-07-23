@@ -15,7 +15,7 @@ describe('unit: Io Brick', function() {
         };
       },
     };
-    brick = new o.lib(cementHelper, {
+    brick = new o.Lib(cementHelper, {
       name: 'cta-io',
       properties: {
         providerName: 'rabbitmq',
