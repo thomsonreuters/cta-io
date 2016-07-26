@@ -29,7 +29,7 @@ describe('unit: Io Brick', function() {
 
   it('should start subscribe method when inputQueue is provided', function(done) {
     return o.co(function* coroutine() {
-      const subscribe = o.sinon.spy(brick.io, 'subscribe');
+      const subscribe = o.sinon.spy(brick.messaging, 'subscribe');
       yield brick.start();
       subscribe.restore();
       o.sinon.assert.calledOnce(subscribe);
@@ -42,7 +42,7 @@ describe('unit: Io Brick', function() {
 
   it('should process with ack', function(done) {
     return o.co(function* coroutine() {
-      const ack = o.sinon.stub(brick.io, 'ack', function() {
+      const ack = o.sinon.stub(brick.messaging, 'ack', function() {
         return Promise.resolve();
       });
       const context = new Context();
@@ -67,7 +67,7 @@ describe('unit: Io Brick', function() {
 
   it('should process with get', function(done) {
     return o.co(function* coroutine() {
-      const _get = o.sinon.stub(brick.io, 'get', function() {
+      const _get = o.sinon.stub(brick.messaging, 'get', function() {
         return Promise.resolve({
           result: {
             json: {
@@ -98,7 +98,7 @@ describe('unit: Io Brick', function() {
 
   it('should process with produce', function(done) {
     return o.co(function* coroutine() {
-      const _produce = o.sinon.stub(brick.io, 'produce', function() {
+      const _produce = o.sinon.stub(brick.messaging, 'produce', function() {
         return Promise.resolve({
           result: {},
         });
