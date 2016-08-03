@@ -16,23 +16,19 @@ const cementHelper = {
 };
 const brick = new o.Lib(cementHelper, {
   name: 'cta-io',
-  properties: {
-    input: {
-      queue: o.shortid.generate(),
-    },
-  },
+  properties: {},
 });
 
-describe.skip('process', function() {
+describe('process', function() {
   it('should process with ack', function(done) {
     return o.co(function* coroutine() {
-      const ack = o.sinon.stub(brick.messaging, 'ack', function() {
+      const _ack = o.sinon.stub(brick.messaging, 'ack', function() {
         return Promise.resolve();
       });
       const context = new Context();
       context.data = {
         nature: {
-          type: 'execution',
+          type: 'message',
           quality: 'acknowledge',
         },
         payload: {
@@ -40,8 +36,9 @@ describe.skip('process', function() {
         },
       };
       yield brick.process(context);
-      ack.restore();
-      o.sinon.assert.calledOnce(ack);
+      _ack.restore();
+      // o.sinon.assert.calledWith(_ack, 'abc');
+      o.sinon.assert.calledOnce(_ack);
       done();
     })
     .catch((err) => {
@@ -63,7 +60,7 @@ describe.skip('process', function() {
       const context = new Context();
       context.data = {
         nature: {
-          type: 'queue',
+          type: 'message',
           quality: 'get',
         },
         payload: {
@@ -72,11 +69,145 @@ describe.skip('process', function() {
       };
       yield brick.process(context);
       _get.restore();
-      o.sinon.assert.calledWith(_get, 'abc');
+      o.sinon.assert.calledWith(_get, {queue: 'abc'});
       done();
     })
     .catch((err) => {
       done(err);
+    });
+  });
+
+  it('should process with subscribe', function(done) {
+    return o.co(function* coroutine() {
+      const stub = o.sinon.stub(brick.messaging, 'subscribe', function() {
+        return Promise.resolve({
+          result: {},
+        });
+      });
+      const context = new Context();
+      context.data = {
+        nature: {
+          type: 'message',
+          quality: 'subscribe',
+        },
+        payload: {
+          key: o.shortid.generate(),
+        },
+      };
+      yield brick.process(context);
+      stub.restore();
+      o.sinon.assert.calledOnce(stub);
+      done();
+    })
+      .catch((err) => {
+        done(err);
+      });
+  });
+
+  it('should process with consume', function(done) {
+    return o.co(function* coroutine() {
+      const stub = o.sinon.stub(brick.messaging, 'consume', function() {
+        return Promise.resolve({
+          result: {},
+        });
+      });
+      const context = new Context();
+      context.data = {
+        nature: {
+          type: 'message',
+          quality: 'consume',
+        },
+        payload: {
+          queue: o.shortid.generate(),
+        },
+      };
+      yield brick.process(context);
+      stub.restore();
+      o.sinon.assert.calledOnce(stub);
+      done();
+    })
+    .catch((err) => {
+      done(err);
+    });
+  });
+
+  context('should process with publish', () => {
+    it('default key', function(done) {
+      return o.co(function* coroutine() {
+        const b = new o.Lib(cementHelper, {
+          name: 'cta-io',
+          properties: {
+            output: {
+              key: o.shortid.generate(),
+            },
+          },
+        });
+        const stub = o.sinon.stub(b.messaging, 'publish', function() {
+          return Promise.resolve({
+            result: {},
+          });
+        });
+        const context = new Context();
+        context.data = {
+          nature: {
+            type: 'message',
+            quality: 'publish',
+          },
+          payload: {
+            id: '01',
+            status: 'ok',
+            description: 'done',
+          },
+        };
+        yield b.process(context);
+        stub.restore();
+        o.sinon.assert.calledWith(stub, {
+          key: b.output.key,
+          json: context.data.payload,
+        });
+        done();
+      })
+      .catch((err) => {
+        done(err);
+      });
+    });
+    it('dynamic key', function(done) {
+      return o.co(function* coroutine() {
+        const b = new o.Lib(cementHelper, {
+          name: 'cta-io',
+          properties: {},
+        });
+        const stub = o.sinon.stub(b.messaging, 'publish', function() {
+          return Promise.resolve({
+            result: {},
+          });
+        });
+        const context = new Context();
+        context.data = {
+          nature: {
+            type: 'message',
+            quality: 'publish',
+          },
+          payload: {
+            key: o.shortid.generate(),
+            message: {
+              id: '01',
+              status: 'ok',
+              description: 'done',
+            },
+          },
+        };
+        yield b.process(context);
+        stub.restore();
+        o.sinon.assert.calledWith(stub, {
+          key: context.data.payload.key,
+          json: context.data.payload.message,
+        });
+        done();
+      })
+      .catch((err) => {
+        done(err);
+      });
     });
   });
 
@@ -89,15 +220,25 @@ describe.skip('process', function() {
       });
       const context = new Context();
       context.data = {
+        nature: {
+          type: 'message',
+          quality: 'produce',
+        },
         payload: {
-          id: '01',
-          status: 'ok',
-          message: 'done',
+          queue: o.shortid.generate(),
+          message: {
+            id: '01',
+            status: 'ok',
+            message: 'done',
+          },
         },
       };
       yield brick.process(context);
       _produce.restore();
-      o.sinon.assert.calledOnce(_produce);
+      o.sinon.assert.calledWith(_produce, {
+        queue: context.data.payload.queue,
+        json: context.data.payload.message,
+      });
       done();
     })
     .catch((err) => {
