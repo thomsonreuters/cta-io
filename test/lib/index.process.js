@@ -2,43 +2,28 @@
 
 const o = require('../common');
 const Context = require('events').EventEmitter;
-let brick;
 
-describe('Io Brick', function() {
-  beforeEach(function() {
-    const cementHelper = {
-      createContext: function() {
-        return {
-          publish: function() {
-          },
-        };
+const cementHelper = {
+  constructor: {
+    name: 'CementHelper',
+  },
+  createContext: function() {
+    return {
+      publish: function() {
       },
     };
-    brick = new o.Lib(cementHelper, {
-      name: 'cta-io',
-      properties: {
-        providerName: 'rabbitmq',
-        parameters: {
-          inputQueue: 'queue',
-          newInstance: true,
-        },
-      },
-    });
-  });
+  },
+};
+const brick = new o.Lib(cementHelper, {
+  name: 'cta-io',
+  properties: {
+    input: {
+      queue: o.shortid.generate(),
+    },
+  },
+});
 
-  it('should start subscribe method when inputQueue is provided', function(done) {
-    return o.co(function* coroutine() {
-      const subscribe = o.sinon.spy(brick.messaging, 'subscribe');
-      yield brick.start();
-      subscribe.restore();
-      o.sinon.assert.calledOnce(subscribe);
-      done();
-    })
-    .catch((err) => {
-      done(err);
-    });
-  });
-
+describe.skip('process', function() {
   it('should process with ack', function(done) {
     return o.co(function* coroutine() {
       const ack = o.sinon.stub(brick.messaging, 'ack', function() {
