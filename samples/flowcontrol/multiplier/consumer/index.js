@@ -2,9 +2,7 @@
 
 const messaging = require('cta-messaging')();
 function cb(json) {
-  return new Promise((resolve) => {
-    resolve(json);
-  });
+  console.log(json);
 }
 messaging.consume({
   queue: 'output.queue',

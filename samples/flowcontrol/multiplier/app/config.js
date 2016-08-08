@@ -23,7 +23,19 @@ module.exports = {
       },
     },
     publish: [{
-      topic: 'topics.com',
+      topic: 'multiplier.do',
+      data: [{}],
+    }],
+  }, {
+    name: 'Multiplier',
+    module: '../../cta-io/samples/flowcontrol/multiplier/app/multiplier.js',
+    properties: {},
+    subscribe: [{
+      topic: 'multiplier.do',
+      data: [{}],
+    }],
+    publish: [{
+      topic: 'multiplier.result',
       data: [{}],
     }],
   }, {
@@ -38,7 +50,7 @@ module.exports = {
       },
     },
     subscribe: [{
-      topic: 'topics.com',
+      topic: 'multiplier.result',
       data: [{}],
     }],
   }],
