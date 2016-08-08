@@ -23,6 +23,17 @@ Refer to [cta-messaging tool](/lib/io/README.md) documentation to read more abou
 
 Note that this brick can be used as a Receiver (Input) and/or a Sender (Output)
 
+# Brick contracts
+
+| nature.type | nature.quality | payload
+| --- | --- | ---
+| message | produce | { queue: string, message: * }
+| message | consume | { queue: string, prefetch: number }
+| message | get | { queue: string }
+| message | publish | { topic: string, message: * }
+| message | subscribe | { topic: string }
+| message | acknowledge | { id: * }
+
 # Configuration sample
 
 ````javascript
