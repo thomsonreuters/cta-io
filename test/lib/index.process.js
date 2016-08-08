@@ -91,7 +91,7 @@ describe('process', function() {
           quality: 'subscribe',
         },
         payload: {
-          key: o.shortid.generate(),
+          topic: o.shortid.generate(),
         },
       };
       yield brick.process(context);
@@ -132,13 +132,13 @@ describe('process', function() {
   });
 
   context('should process with publish', () => {
-    it('default key', function(done) {
+    it('default topic', function(done) {
       return o.co(function* coroutine() {
         const b = new o.Lib(cementHelper, {
           name: 'cta-io',
           properties: {
             output: {
-              key: o.shortid.generate(),
+              topic: o.shortid.generate(),
             },
           },
         });
@@ -162,7 +162,7 @@ describe('process', function() {
         yield b.process(context);
         stub.restore();
         o.sinon.assert.calledWith(stub, {
-          key: b.output.key,
+          topic: b.output.topic,
           json: context.data.payload,
         });
         done();
@@ -171,7 +171,7 @@ describe('process', function() {
         done(err);
       });
     });
-    it('dynamic key', function(done) {
+    it('dynamic topic', function(done) {
       return o.co(function* coroutine() {
         const b = new o.Lib(cementHelper, {
           name: 'cta-io',
@@ -189,7 +189,7 @@ describe('process', function() {
             quality: 'publish',
           },
           payload: {
-            key: o.shortid.generate(),
+            topic: o.shortid.generate(),
             message: {
               id: '01',
               status: 'ok',
@@ -200,7 +200,7 @@ describe('process', function() {
         yield b.process(context);
         stub.restore();
         o.sinon.assert.calledWith(stub, {
-          key: context.data.payload.key,
+          topic: context.data.payload.topic,
           json: context.data.payload.message,
         });
         done();

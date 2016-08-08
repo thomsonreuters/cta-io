@@ -18,7 +18,9 @@ module.exports = {
       messaging: 'messaging',
     },
     properties: {
-      inputQueue: 'input.queue',
+      input: {
+        queue: 'input.queue',
+      },
     },
     publish: [{
       topic: 'topics.com',
@@ -31,7 +33,9 @@ module.exports = {
       messaging: 'messaging',
     },
     properties: {
-      outputQueue: 'output.queue',
+      output: {
+        queue: 'output.queue',
+      },
     },
     subscribe: [{
       topic: 'topics.com',

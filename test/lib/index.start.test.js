@@ -21,7 +21,7 @@ describe('start', function() {
         name: 'cta-io',
         properties: {
           input: {
-            key: o.shortid.generate(),
+            topic: o.shortid.generate(),
           },
         },
       });
@@ -62,7 +62,7 @@ describe('start', function() {
         properties: {
           input: {
             queue: [o.shortid.generate(), o.shortid.generate()],
-            key: [o.shortid.generate(), o.shortid.generate()],
+            topic: [o.shortid.generate(), o.shortid.generate()],
           },
         },
       });

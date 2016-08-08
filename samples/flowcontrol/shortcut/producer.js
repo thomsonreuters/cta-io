@@ -6,7 +6,7 @@ const json = {
 };
 
 const fn = () => {
-  messaging.publish({
+  messaging.produce({
     queue: 'input.queue',
     json: json,
   }).then(function(response) {

@@ -6,7 +6,7 @@ function cb(json) {
     resolve(json);
   });
 }
-messaging.subscribe({
+messaging.consume({
   queue: 'output.queue',
   cb: cb,
 }).then(function(response) {
