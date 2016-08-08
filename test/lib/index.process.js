@@ -32,13 +32,12 @@ describe('process', function() {
           quality: 'acknowledge',
         },
         payload: {
-          jobid: 'abc',
+          id: 'abc',
         },
       };
       yield brick.process(context);
       _ack.restore();
-      // o.sinon.assert.calledWith(_ack, 'abc');
-      o.sinon.assert.calledOnce(_ack);
+      o.sinon.assert.calledWith(_ack, 'abc');
       done();
     })
     .catch((err) => {
