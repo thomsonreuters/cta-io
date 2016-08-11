@@ -1,7 +1,16 @@
 'use strict';
 
 module.exports = {
+  name: 'io sample',
   tools: [{
+    name: 'logger',
+    module: 'cta-logger',
+    properties: {
+      level: 'silly',
+    },
+    scope: 'all',
+    singleton: true,
+  }, {
     name: 'messaging',
     module: 'cta-messaging',
     properties: {
@@ -10,6 +19,7 @@ module.exports = {
         url: 'amqp://localhost?heartbeat=60',
       },
     },
+    singleton: true,
   }],
   bricks: [{
     name: 'Receiver',
