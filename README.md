@@ -1,159 +1,84 @@
-# CTA-IO
+CTA-IO
+========
 
-Send, receive & queue module for CTA Opensource projects
+This is the Input/Output Brick for cta project
 
-## How to use it
+First refer to cta-brick and cta-flowcontrol repositories to familiarize yourself with those concepts.
 
-Require lib
+Like all bricks, IO Brick can be easily injected into a flowcontrol using a configuration
 
-````javascript
-const IoLib = require('./lib');
-````
+# Brick dependencies
 
-### Choose a provider
+This brick depends on cta-messaging tool to read & write to/from the outside.
+ 
+If it's not specified, it will use the default one. Refer to cta-messaging doc.
 
-#### RabbitMQ provider
+Refer to [cta-messaging tool](/lib/io/README.md) documentation to read more about this Tool
 
-Default options
+# Brick properties
 
-````javascript
-const IoLib = require('./lib');
-const provider = new IoLib('rabbitmq');
-````
+* input.queue & input.topic: this is the name of the default queue/topic where to consume from as soon as the application is started.
+  Received messages are then automatically published in the channel according to the publish configuration of the brick
+* output.queue & output.topic: this is the name of the default queue/topic where to write to
 
-Custom options
+Note that this brick can be used as a Receiver (Input) and/or a Sender (Output)
 
-````javascript
-const IoLib = require('./lib');
-const provider = new IoLib('rabbitmq', {url: 'amqp://my.mq.host'});
-````
+# Brick contracts
 
-This provider uses amqplib node module
+| nature.type | nature.quality | payload
+| --- | --- | ---
+| message | produce | { queue: string, message: * }
+| message | consume | { queue: string, prefetch: number }
+| message | get | { queue: string }
+| message | publish | { topic: string, message: * }
+| message | subscribe | { topic: string }
+| message | acknowledge | { id: * }
 
-Refer to https://www.rabbitmq.com/ to get a working rabbitMQ environment.
-
-### Produce
-
-````javascript
-// produce message
-const IoLib = require('../../lib');
-
-const provider = process.argv.slice(2).join() || 'rabbitmq';
-console.log('Using provider "' + provider + '"');
-
-const io = new IoLib(provider);
-
-io.produce({
-  queue: 'test',
-  json: {
-    job: 'run command',
-    cmd: 'ls',
-  },
-}).then(function(response) {
-  console.log('response: ', response);
-}, function(err) {
-  console.error('error: ', err);
-});
-
-````
-
-see samples/simple/produce.js
-
-### Consume
-
-````javascript
-// consume message
-const IoLib = require('../../lib');
-
-const provider = process.argv.slice(2).join() || 'rabbitmq';
-console.log('Using provider "' + provider + '"');
-
-const io = new IoLib(provider);
-
-function cb(json) {
-  return new Promise((resolve) => {
-    console.log('Received new message: ', json);
-    // adding timeout to simulate job running
-    setTimeout(function() {
-      resolve(json);
-    }, 500);
-  });
-}
-
-io.consume({
-  queue: 'test',
-  cb: cb,
-}).then(function(response) {
-  console.log('response: ', response);
-}, function(err) {
-  console.error('error: ', err);
-});
-
-````
-
-see samples/simple/consume.js
-
-### Subscribe
+# Configuration sample
 
 ````javascript
 'use strict';
 
-// subscribe to receive messages
-const IoLib = require('../../lib');
-
-const provider = process.argv.slice(2).join() || 'rabbitmq';
-console.log('Using provider "' + provider + '"');
-
-const io = new IoLib(provider);
-
-function cb(json) {
-  return new Promise((resolve) => {
-    console.log('Received new message: ', json);
-    resolve(json);
-  });
-}
-
-io.subscribe({
-  key: 'test_key',
-  cb: cb,
-}).then(function(response) {
-  console.log('response: ', response);
-}, function(err) {
-  console.error('error: ', err);
-});
-
-````
-
-see samples/simple/subscribe.js
-
-### Publish
-
-````javascript
-'use strict';
-
-// publish message
-const IoLib = require('../../lib');
-
-const provider = process.argv.slice(2).join() || 'rabbitmq';
-console.log('Using provider "' + provider + '"');
-
-const io = new IoLib(provider);
-
-const json = {
-  id: '123',
-  status: 'ok',
-  description: 'simple test',
+module.exports = {
+  tools: [{
+    name: 'messaging',
+    module: 'cta-messaging',
+    properties: {
+      provider: 'rabbitmq',
+      parameters: {
+        url: 'amqp://localhost?heartbeat=60',
+      },
+    },
+  }],
+  bricks: [{
+    name: 'Receiver',
+    module: 'cta-io',
+    dependencies: {
+      messaging: 'messaging',
+    },
+    properties: {
+      input: {
+        queue: 'input.queue',
+      },
+    },
+    publish: [{
+      topic: 'topics.com',
+      data: [{}],
+    }],
+  }, {
+    name: 'Sender',
+    module: 'cta-io',
+    dependencies: {
+      messaging: 'messaging',
+    },
+    properties: {},
+    subscribe: [{
+      topic: 'topics.com',
+      data: [{}],
+    }],
+  }],
 };
-
-io.publish({
-  key: 'test_key',
-  json: json,
-}).then(function(response) {
-  console.log('response: ', response);
-}, function(err) {
-  console.error('error: ', err);
-});
-
 ````
 
-see samples/simple/publish.js
+See a full working sample in /samples/flowcontrol/
+
