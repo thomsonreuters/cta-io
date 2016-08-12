@@ -39,8 +39,8 @@
     "shortid": "~2.2.4"
   },
   "sourceDependencies": {
-    "cta-brick": "git@git.sami.int.thomsonreuters.com:compass/cta-brick.git",
-    "cta-messaging": "git@git.sami.int.thomsonreuters.com:compass/cta-messaging.git",
-    "cta-flowcontrol": "git@git.sami.int.thomsonreuters.com:compass/cta-flowcontrol.git"
+    "cta-brick": "git+ssh://git@git.sami.int.thomsonreuters.com:compass/cta-brick.git",
+    "cta-messaging": "git+ssh://git@git.sami.int.thomsonreuters.com:compass/cta-messaging.git",
+    "cta-flowcontrol": "git+ssh://git@git.sami.int.thomsonreuters.com:compass/cta-flowcontrol.git"
   }
 }
