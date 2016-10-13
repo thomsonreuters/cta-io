@@ -37,5 +37,10 @@
     "co": "~4.6.0",
     "lodash": "~4.11.0",
     "shortid": "~2.2.4"
+  },
+  "sourceDependencies": {
+    "cta-brick": "git+ssh://git@git.sami.int.thomsonreuters.com:compass/cta-brick.git",
+    "cta-messaging": "git+ssh://git@git.sami.int.thomsonreuters.com:compass/cta-messaging.git",
+    "cta-flowcontrol": "git+ssh://git@git.sami.int.thomsonreuters.com:compass/cta-flowcontrol.git"
   }
 }

@@ -13,8 +13,6 @@ This brick depends on cta-messaging tool to read & write to/from the outside.
  
 If it's not specified, it will use the default one. Refer to cta-messaging doc.
 
-Refer to [cta-messaging tool](/lib/io/README.md) documentation to read more about this Tool
-
 # Brick properties
 
 * input.queue & input.topic: this is the name of the default queue/topic where to consume from as soon as the application is started.
