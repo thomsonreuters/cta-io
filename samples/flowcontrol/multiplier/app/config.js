@@ -38,7 +38,7 @@ module.exports = {
     }],
   }, {
     name: 'Multiplier',
-    module: '../../cta-io/samples/flowcontrol/multiplier/app/multiplier.js',
+    module: './app/multiplier.js',
     properties: {},
     subscribe: [{
       topic: 'multiplier.do',
