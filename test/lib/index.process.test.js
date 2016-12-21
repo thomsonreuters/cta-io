@@ -28,7 +28,7 @@ describe('process', function() {
       const context = new Context();
       context.data = {
         nature: {
-          type: 'message',
+          type: 'messages',
           quality: 'acknowledge',
         },
         payload: {
@@ -59,7 +59,7 @@ describe('process', function() {
       const context = new Context();
       context.data = {
         nature: {
-          type: 'message',
+          type: 'messages',
           quality: 'get',
         },
         payload: {
@@ -90,7 +90,7 @@ describe('process', function() {
       };
       context.data = {
         nature: {
-          type: 'message',
+          type: 'messages',
           quality: 'subscribe',
         },
         payload: payload,
@@ -119,7 +119,7 @@ describe('process', function() {
       };
       context.data = {
         nature: {
-          type: 'message',
+          type: 'messages',
           quality: 'consume',
         },
         payload: payload,
@@ -153,7 +153,7 @@ describe('process', function() {
         const context = new Context();
         context.data = {
           nature: {
-            type: 'message',
+            type: 'messages',
             quality: 'publish',
           },
           payload: {
@@ -188,12 +188,12 @@ describe('process', function() {
         const context = new Context();
         context.data = {
           nature: {
-            type: 'message',
+            type: 'messages',
             quality: 'publish',
           },
           payload: {
             topic: o.shortid.generate(),
-            message: {
+            json: {
               id: '01',
               status: 'ok',
               description: 'done',
@@ -204,7 +204,7 @@ describe('process', function() {
         stub.restore();
         o.sinon.assert.calledWith(stub, {
           topic: context.data.payload.topic,
-          json: context.data.payload.message,
+          json: context.data.payload.json,
         });
         done();
       })
@@ -233,7 +233,7 @@ describe('process', function() {
         const context = new Context();
         context.data = {
           nature: {
-            type: 'message',
+            type: 'messages',
             quality: 'produce',
           },
           payload: {
@@ -268,12 +268,12 @@ describe('process', function() {
         const context = new Context();
         context.data = {
           nature: {
-            type: 'message',
+            type: 'messages',
             quality: 'produce',
           },
           payload: {
             queue: o.shortid.generate(),
-            message: {
+            json: {
               id: '01',
               status: 'ok',
               message: 'done',
@@ -284,7 +284,7 @@ describe('process', function() {
         _produce.restore();
         o.sinon.assert.calledWith(_produce, {
           queue: context.data.payload.queue,
-          json: context.data.payload.message,
+          json: context.data.payload.json,
         });
         done();
       })
