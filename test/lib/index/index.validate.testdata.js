@@ -5,27 +5,27 @@ module.exports = {
     {
       message: 'reject produce with missing param queue',
       params: {
-        json: {},
+        content: {},
       },
     },
     {
-      message: 'reject produce with missing param json',
+      message: 'reject produce with missing param content',
       params: {
         queue: 'test',
       },
     },
     {
-      message: 'reject produce with wrong param type json',
+      message: 'reject produce with wrong param type content',
       params: {
         queue: 'test',
-        json: 'abc',
+        content: 'abc',
       },
     },
     {
       message: 'reject produce with wrong param type queue',
       params: {
         queue: {},
-        json: {},
+        content: {},
       },
     },
   ],
@@ -89,11 +89,11 @@ module.exports = {
     {
       message: 'reject publish with missing param key',
       params: {
-        json: {},
+        content: {},
       },
     },
     {
-      message: 'reject publish with missing param json',
+      message: 'reject publish with missing param content',
       params: {
         key: 'test_key',
       },
@@ -102,14 +102,14 @@ module.exports = {
       message: 'reject publish with wrong param type key',
       params: {
         key: {},
-        json: {},
+        content: {},
       },
     },
     {
-      message: 'reject publish with wrong param type json',
+      message: 'reject publish with wrong param type content',
       params: {
         key: 'test_key',
-        json: 123,
+        content: 123,
       },
     },
   ],

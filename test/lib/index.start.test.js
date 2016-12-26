@@ -16,7 +16,7 @@ const cementHelper = {
 
 describe('start', function() {
   it('should start subscribe method when provided', function(done) {
-    return o.co(function* coroutine() {
+    o.co(function* coroutine() {
       const brick = new o.Lib(cementHelper, {
         name: 'cta-io',
         properties: {
@@ -36,7 +36,7 @@ describe('start', function() {
     });
   });
   it('should start consume method when provided', function(done) {
-    return o.co(function* coroutine() {
+    o.co(function* coroutine() {
       const brick = new o.Lib(cementHelper, {
         name: 'cta-io',
         properties: {
@@ -56,7 +56,7 @@ describe('start', function() {
     });
   });
   it('should start both when provided', function(done) {
-    return o.co(function* coroutine() {
+    o.co(function* coroutine() {
       const brick = new o.Lib(cementHelper, {
         name: 'cta-io',
         properties: {
