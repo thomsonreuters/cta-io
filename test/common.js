@@ -3,6 +3,7 @@
 const shortid = require('shortid');
 
 module.exports = {
+  Messaging: require('cta-messaging'),
   assert: require('chai').assert,
   sinon: require('sinon'),
   shortid: shortid,
