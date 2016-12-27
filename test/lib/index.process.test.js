@@ -20,6 +20,83 @@ const brick = new o.Lib(cementHelper, {
 });
 
 describe('process', function() {
+  it('should reject incorrect nature.type', function(done) {
+    const _ack = o.sinon.stub(brick, '_ack', function() {
+      return Promise.resolve();
+    });
+    o.co(function* coroutine() {
+      const context = new Context();
+      context.data = {
+        nature: {
+          type: 'some_type',
+          quality: 'acknowledge',
+        },
+        payload: {
+          id: 'abc',
+        },
+      };
+      yield brick.process(context);
+      done('should not be here');
+    })
+    .catch((err) => {
+      o.assert(err);
+      o.sinon.assert.notCalled(_ack);
+      _ack.restore();
+      done();
+    });
+  });
+
+  it('should reject incorrect nature.quality', function(done) {
+    const _ack = o.sinon.stub(brick, '_ack', function() {
+      return Promise.resolve();
+    });
+    o.co(function* coroutine() {
+      const context = new Context();
+      context.data = {
+        nature: {
+          type: 'messages',
+          quality: 'some_quality',
+        },
+        payload: {
+          id: 'abc',
+        },
+      };
+      yield brick.process(context);
+      done('should not be here');
+    })
+    .catch((err) => {
+      o.assert(err);
+      o.sinon.assert.notCalled(_ack);
+      _ack.restore();
+      done();
+    });
+  });
+
+  it('should reject when error occurred', function(done) {
+    const _ack = o.sinon.stub(brick, '_ack', function() {
+      return Promise.reject('mock error');
+    });
+    const context = new Context();
+    context.data = {
+      nature: {
+        type: 'messages',
+        quality: 'acknowledge',
+      },
+      payload: {
+        id: 'abc',
+      },
+    };
+    brick.process(context)
+      .then(() => {
+        done('should not be here');
+      }, (err) => {
+        o.assert(err);
+        o.sinon.assert.called(_ack);
+        _ack.restore();
+        done();
+      });
+  });
+
   it('should process with ack', function(done) {
     o.co(function* coroutine() {
       const _ack = o.sinon.stub(brick.messaging, 'ack', function() {
