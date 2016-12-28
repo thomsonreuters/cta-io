@@ -35,7 +35,7 @@ describe('start', function() {
   it('should start subscribe to one topic when provided', function(done) {
     o.co(function* coroutine() {
       const topic = o.shortid.generate();
-      brick.input.topic = topic;
+      brick.properties.input.topic = topic;
       yield brick.start();
       o.sinon.assert.calledOnce(messaging.subscribe);
       const args = messaging.subscribe.getCalls()[0].args[0];
@@ -50,7 +50,7 @@ describe('start', function() {
   it('should set topic ack mode when provided', function(done) {
     o.co(function* coroutine() {
       const topic = o.shortid.generate();
-      brick.input.topic = { name: topic, ack: 'auto' };
+      brick.properties.input.topic = { name: topic, ack: 'auto' };
       yield brick.start();
       o.sinon.assert.calledOnce(messaging.subscribe);
       const args = messaging.subscribe.getCalls()[0].args[0];
@@ -65,7 +65,7 @@ describe('start', function() {
 
   it('should start subscribe to many topics when provided', function(done) {
     o.co(function* coroutine() {
-      brick.input.topic = [o.shortid.generate(), o.shortid.generate()];
+      brick.properties.input.topic = [o.shortid.generate(), o.shortid.generate()];
       yield brick.start();
       o.sinon.assert.calledTwice(messaging.subscribe);
       done();
@@ -78,7 +78,7 @@ describe('start', function() {
   it('should start consume from queue when provided', function(done) {
     o.co(function* coroutine() {
       const queue = o.shortid.generate();
-      brick.input.queue = queue;
+      brick.properties.input.queue = queue;
       yield brick.start();
       o.sinon.assert.calledOnce(messaging.consume);
       const args = messaging.consume.getCalls()[0].args[0];
@@ -93,7 +93,7 @@ describe('start', function() {
   it('should set queue ack mode when provided', function(done) {
     o.co(function* coroutine() {
       const queue = o.shortid.generate();
-      brick.input.queue = { name: queue, ack: 'auto' };
+      brick.properties.input.queue = { name: queue, ack: 'auto' };
       yield brick.start();
       o.sinon.assert.calledOnce(messaging.consume);
       const args = messaging.consume.getCalls()[0].args[0];
@@ -108,7 +108,7 @@ describe('start', function() {
 
   it('should start consume from many queues when provided', function(done) {
     o.co(function* coroutine() {
-      brick.input.queue = [o.shortid.generate(), o.shortid.generate()];
+      brick.properties.input.queue = [o.shortid.generate(), o.shortid.generate()];
       yield brick.start();
       o.sinon.assert.calledTwice(messaging.consume);
       done();
@@ -120,11 +120,25 @@ describe('start', function() {
 
   it('should start consume from queues and subscribe to topics when both are provided', function(done) {
     o.co(function* coroutine() {
-      brick.input.queue = [o.shortid.generate(), o.shortid.generate()];
-      brick.input.topic = [o.shortid.generate(), o.shortid.generate()];
+      brick.properties.input.queue = [o.shortid.generate(), o.shortid.generate()];
+      brick.properties.input.topic = [o.shortid.generate(), o.shortid.generate()];
       yield brick.start();
       o.sinon.assert.calledTwice(messaging.consume);
       o.sinon.assert.calledTwice(messaging.subscribe);
+      done();
+    })
+    .catch((err) => {
+      done(err);
+    });
+  });
+
+  it('should not start subscribe/consume when no input properties are provided', function(done) {
+    o.co(function* coroutine() {
+      brick.properties.input = {};
+      yield brick.start();
+      o.sleep(1000);
+      o.sinon.assert.notCalled(messaging.consume);
+      o.sinon.assert.notCalled(messaging.subscribe);
       done();
     })
     .catch((err) => {

@@ -34,8 +34,8 @@ describe('constructor', () => {
         output: output,
       },
     });
-    o.assert.deepEqual(brick.input, input);
-    o.assert.deepEqual(brick.output, output);
+    o.assert.deepEqual(brick.properties.input, input);
+    o.assert.deepEqual(brick.properties.output, output);
     o.assert.property(brick.dependencies, 'messaging');
   });
 });

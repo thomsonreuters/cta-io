@@ -213,11 +213,12 @@ describe('process', function() {
 
   it('should process with publish on default topic', function(done) {
     o.co(function* coroutine() {
+      const topic = o.shortid.generate();
       const b = new o.Lib(cementHelper, {
         name: 'cta-io',
         properties: {
           output: {
-            topic: o.shortid.generate(),
+            topic: topic,
           },
         },
       });
@@ -241,7 +242,7 @@ describe('process', function() {
       yield b.process(context);
       stub.restore();
       o.sinon.assert.calledWith(stub, {
-        topic: b.output.topic,
+        topic: topic,
         content: context.data.payload,
       });
       done();
@@ -251,7 +252,8 @@ describe('process', function() {
     });
   });
 
-  it('should process with publish on default topic', function(done) {
+  it('should process with publish on custom topic', function(done) {
+    const topic = o.shortid.generate();
     o.co(function* coroutine() {
       const b = new o.Lib(cementHelper, {
         name: 'cta-io',
@@ -269,7 +271,7 @@ describe('process', function() {
           quality: 'publish',
         },
         payload: {
-          topic: o.shortid.generate(),
+          topic: topic,
           content: {
             id: '01',
             status: 'ok',
@@ -280,7 +282,7 @@ describe('process', function() {
       yield b.process(context);
       stub.restore();
       o.sinon.assert.calledWith(stub, {
-        topic: context.data.payload.topic,
+        topic: topic,
         content: context.data.payload.content,
       });
       done();
