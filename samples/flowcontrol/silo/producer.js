@@ -18,7 +18,7 @@ class Broker extends Brick {
       const data = {
         id: shortid.generate(),
         nature: {
-          type: 'message',
+          type: 'messages',
           quality: 'produce',
         },
         payload: {

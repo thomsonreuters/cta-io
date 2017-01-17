@@ -20,15 +20,15 @@ const brick = new o.Lib(cementHelper, {
 });
 
 describe('process', function() {
-  it('should process with ack', function(done) {
-    return o.co(function* coroutine() {
-      const _ack = o.sinon.stub(brick.messaging, 'ack', function() {
-        return Promise.resolve();
-      });
+  it('should reject incorrect nature.type', function(done) {
+    const _ack = o.sinon.stub(brick, '_ack', function() {
+      return Promise.resolve();
+    });
+    o.co(function* coroutine() {
       const context = new Context();
       context.data = {
         nature: {
-          type: 'message',
+          type: 'some_type',
           quality: 'acknowledge',
         },
         payload: {
@@ -36,8 +36,85 @@ describe('process', function() {
         },
       };
       yield brick.process(context);
+      done('should not be here');
+    })
+    .catch((err) => {
+      o.assert(err);
+      o.sinon.assert.notCalled(_ack);
       _ack.restore();
+      done();
+    });
+  });
+
+  it('should reject incorrect nature.quality', function(done) {
+    const _ack = o.sinon.stub(brick, '_ack', function() {
+      return Promise.resolve();
+    });
+    o.co(function* coroutine() {
+      const context = new Context();
+      context.data = {
+        nature: {
+          type: 'messages',
+          quality: 'some_quality',
+        },
+        payload: {
+          id: 'abc',
+        },
+      };
+      yield brick.process(context);
+      done('should not be here');
+    })
+    .catch((err) => {
+      o.assert(err);
+      o.sinon.assert.notCalled(_ack);
+      _ack.restore();
+      done();
+    });
+  });
+
+  it('should reject when error occurred', function(done) {
+    const _ack = o.sinon.stub(brick, '_ack', function() {
+      return Promise.reject('mock error');
+    });
+    const context = new Context();
+    context.data = {
+      nature: {
+        type: 'messages',
+        quality: 'acknowledge',
+      },
+      payload: {
+        id: 'abc',
+      },
+    };
+    brick.process(context)
+      .then(() => {
+        done('should not be here');
+      }, (err) => {
+        o.assert(err);
+        o.sinon.assert.called(_ack);
+        _ack.restore();
+        done();
+      });
+  });
+
+  it('should process with ack', function(done) {
+    o.co(function* coroutine() {
+      const _ack = o.sinon.stub(brick.messaging, 'ack', function() {
+        return Promise.resolve();
+      });
+      const context = new Context();
+      context.data = {
+        nature: {
+          type: 'messages',
+          quality: 'acknowledge',
+        },
+        payload: {
+          id: 'abc',
+        },
+      };
+      yield brick.process(context);
       o.sinon.assert.calledWith(_ack, 'abc');
+      _ack.restore();
       done();
     })
     .catch((err) => {
@@ -46,11 +123,11 @@ describe('process', function() {
   });
 
   it('should process with get', function(done) {
-    return o.co(function* coroutine() {
+    o.co(function* coroutine() {
       const _get = o.sinon.stub(brick.messaging, 'get', function() {
         return Promise.resolve({
           result: {
-            json: {
+            content: {
               id: 1,
             },
           },
@@ -59,7 +136,7 @@ describe('process', function() {
       const context = new Context();
       context.data = {
         nature: {
-          type: 'message',
+          type: 'messages',
           quality: 'get',
         },
         payload: {
@@ -77,7 +154,7 @@ describe('process', function() {
   });
 
   it('should process with subscribe', function(done) {
-    return o.co(function* coroutine() {
+    o.co(function* coroutine() {
       const stub = o.sinon.stub(brick.messaging, 'subscribe', function() {
         return Promise.resolve({
           result: {},
@@ -90,7 +167,7 @@ describe('process', function() {
       };
       context.data = {
         nature: {
-          type: 'message',
+          type: 'messages',
           quality: 'subscribe',
         },
         payload: payload,
@@ -106,7 +183,7 @@ describe('process', function() {
   });
 
   it('should process with consume', function(done) {
-    return o.co(function* coroutine() {
+    o.co(function* coroutine() {
       const stub = o.sinon.stub(brick.messaging, 'consume', function() {
         return Promise.resolve({
           result: {},
@@ -119,7 +196,7 @@ describe('process', function() {
       };
       context.data = {
         nature: {
-          type: 'message',
+          type: 'messages',
           quality: 'consume',
         },
         payload: payload,
@@ -134,163 +211,163 @@ describe('process', function() {
     });
   });
 
-  context('should process with publish', () => {
-    it('default topic', function(done) {
-      return o.co(function* coroutine() {
-        const b = new o.Lib(cementHelper, {
-          name: 'cta-io',
-          properties: {
-            output: {
-              topic: o.shortid.generate(),
-            },
+  it('should process with publish on default topic', function(done) {
+    o.co(function* coroutine() {
+      const topic = o.shortid.generate();
+      const b = new o.Lib(cementHelper, {
+        name: 'cta-io',
+        properties: {
+          output: {
+            topic: topic,
           },
+        },
+      });
+      const stub = o.sinon.stub(b.messaging, 'publish', function() {
+        return Promise.resolve({
+          result: {},
         });
-        const stub = o.sinon.stub(b.messaging, 'publish', function() {
-          return Promise.resolve({
-            result: {},
-          });
+      });
+      const context = new Context();
+      context.data = {
+        nature: {
+          type: 'messages',
+          quality: 'publish',
+        },
+        payload: {
+          id: '01',
+          status: 'ok',
+          description: 'done',
+        },
+      };
+      yield b.process(context);
+      stub.restore();
+      o.sinon.assert.calledWith(stub, {
+        topic: topic,
+        content: context.data.payload,
+      });
+      done();
+    })
+    .catch((err) => {
+      done(err);
+    });
+  });
+
+  it('should process with publish on custom topic', function(done) {
+    const topic = o.shortid.generate();
+    o.co(function* coroutine() {
+      const b = new o.Lib(cementHelper, {
+        name: 'cta-io',
+        properties: {},
+      });
+      const stub = o.sinon.stub(b.messaging, 'publish', function() {
+        return Promise.resolve({
+          result: {},
         });
-        const context = new Context();
-        context.data = {
-          nature: {
-            type: 'message',
-            quality: 'publish',
-          },
-          payload: {
+      });
+      const context = new Context();
+      context.data = {
+        nature: {
+          type: 'messages',
+          quality: 'publish',
+        },
+        payload: {
+          topic: topic,
+          content: {
             id: '01',
             status: 'ok',
             description: 'done',
           },
-        };
-        yield b.process(context);
-        stub.restore();
-        o.sinon.assert.calledWith(stub, {
-          topic: b.output.topic,
-          json: context.data.payload,
-        });
-        done();
-      })
-      .catch((err) => {
-        done(err);
+        },
+      };
+      yield b.process(context);
+      stub.restore();
+      o.sinon.assert.calledWith(stub, {
+        topic: topic,
+        content: context.data.payload.content,
       });
-    });
-    it('dynamic topic', function(done) {
-      return o.co(function* coroutine() {
-        const b = new o.Lib(cementHelper, {
-          name: 'cta-io',
-          properties: {},
-        });
-        const stub = o.sinon.stub(b.messaging, 'publish', function() {
-          return Promise.resolve({
-            result: {},
-          });
-        });
-        const context = new Context();
-        context.data = {
-          nature: {
-            type: 'message',
-            quality: 'publish',
-          },
-          payload: {
-            topic: o.shortid.generate(),
-            message: {
-              id: '01',
-              status: 'ok',
-              description: 'done',
-            },
-          },
-        };
-        yield b.process(context);
-        stub.restore();
-        o.sinon.assert.calledWith(stub, {
-          topic: context.data.payload.topic,
-          json: context.data.payload.message,
-        });
-        done();
-      })
-      .catch((err) => {
-        done(err);
-      });
+      done();
+    })
+    .catch((err) => {
+      done(err);
     });
   });
 
-  context('should process with produce', function() {
-    it('default queue', (done) => {
-      return o.co(function* coroutine() {
-        const b = new o.Lib(cementHelper, {
-          name: 'cta-io',
-          properties: {
-            output: {
-              queue: o.shortid.generate(),
-            },
+  it('should process with produce on default queue', (done) => {
+    o.co(function* coroutine() {
+      const b = new o.Lib(cementHelper, {
+        name: 'cta-io',
+        properties: {
+          output: {
+            queue: o.shortid.generate(),
           },
+        },
+      });
+      const _produce = o.sinon.stub(brick.messaging, 'produce', function() {
+        return Promise.resolve({
+          result: {},
         });
-        const _produce = o.sinon.stub(brick.messaging, 'produce', function() {
-          return Promise.resolve({
-            result: {},
-          });
+      });
+      const context = new Context();
+      context.data = {
+        nature: {
+          type: 'messages',
+          quality: 'produce',
+        },
+        payload: {
+          id: '01',
+          status: 'ok',
+          message: 'done',
+        },
+      };
+      yield b.process(context);
+      _produce.restore();
+      o.sinon.assert.calledWith(_produce, {
+        queue: b.properties.output.queue,
+        content: context.data.payload,
+      });
+      done();
+    })
+    .catch((err) => {
+      done(err);
+    });
+  });
+
+  it('should process with produce on dynamic queue', (done) => {
+    o.co(function* coroutine() {
+      const b = new o.Lib(cementHelper, {
+        name: 'cta-io',
+        properties: {},
+      });
+      const _produce = o.sinon.stub(brick.messaging, 'produce', function() {
+        return Promise.resolve({
+          result: {},
         });
-        const context = new Context();
-        context.data = {
-          nature: {
-            type: 'message',
-            quality: 'produce',
-          },
-          payload: {
+      });
+      const context = new Context();
+      context.data = {
+        nature: {
+          type: 'messages',
+          quality: 'produce',
+        },
+        payload: {
+          queue: o.shortid.generate(),
+          content: {
             id: '01',
             status: 'ok',
             message: 'done',
           },
-        };
-        yield b.process(context);
-        _produce.restore();
-        o.sinon.assert.calledWith(_produce, {
-          queue: b.properties.output.queue,
-          json: context.data.payload,
-        });
-        done();
-      })
-      .catch((err) => {
-        done(err);
+        },
+      };
+      yield b.process(context);
+      _produce.restore();
+      o.sinon.assert.calledWith(_produce, {
+        queue: context.data.payload.queue,
+        content: context.data.payload.content,
       });
-    });
-    it('dynamic queue', (done) => {
-      return o.co(function* coroutine() {
-        const b = new o.Lib(cementHelper, {
-          name: 'cta-io',
-          properties: {},
-        });
-        const _produce = o.sinon.stub(brick.messaging, 'produce', function() {
-          return Promise.resolve({
-            result: {},
-          });
-        });
-        const context = new Context();
-        context.data = {
-          nature: {
-            type: 'message',
-            quality: 'produce',
-          },
-          payload: {
-            queue: o.shortid.generate(),
-            message: {
-              id: '01',
-              status: 'ok',
-              message: 'done',
-            },
-          },
-        };
-        yield b.process(context);
-        _produce.restore();
-        o.sinon.assert.calledWith(_produce, {
-          queue: context.data.payload.queue,
-          json: context.data.payload.message,
-        });
-        done();
-      })
-      .catch((err) => {
-        done(err);
-      });
+      done();
+    })
+    .catch((err) => {
+      done(err);
     });
   });
 });
