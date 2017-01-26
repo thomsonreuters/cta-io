@@ -39,7 +39,7 @@
   "license": "Apache-2.0",
   "dependencies": {
     "cta-common": "git+ssh://git@git.sami.int.thomsonreuters.com:compass/cta-common.git",
-    "cta-brick": "git+ssh://git@git.sami.int.thomsonreuters.com:compass/cta-brick.git#ci",
+    "cta-brick": "git+ssh://git@git.sami.int.thomsonreuters.com:compass/cta-brick.git",
     "cta-messaging": "git+ssh://git@git.sami.int.thomsonreuters.com:compass/cta-messaging.git#ci",
     "co": "~4.6.0",
     "lodash": "~4.11.0",
