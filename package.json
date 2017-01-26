@@ -1,12 +1,13 @@
 {
   "name": "cta-io",
-  "version": "0.0.0",
+  "version": "1.0.0",
   "description": "input/output to cta components",
   "author": "CTA Team <cta@thomsonreuters.com>",
   "main": "lib/index.js",
   "scripts": {
-    "test": "_mocha test/index.js",
-    "codecoverage": "istanbul cover node_modules/mocha/bin/_mocha -- -R spec && opener ./coverage/lcov-report/index.html",
+    "test": "NODE_PATH=. _mocha",
+    "codecoverage": "istanbul cover node_modules/mocha/bin/_mocha -- -R spec",
+    "lint": "eslint --quiet lib test",
     "docs": "jsdoc --readme README.md lib -r -d docs && opener ./docs/index.html"
   },
   "repository": {
@@ -14,16 +15,19 @@
     "url": "git@git.sami.int.thomsonreuters.com:compass/cta-io.git"
   },
   "engines": {
-    "node": "4.2.2"
+    "node": "6.9.4"
   },
   "devDependencies": {
+    "cta-flowcontrol": "git+ssh://git@git.sami.int.thomsonreuters.com:compass/cta-flowcontrol.git",
     "babel-eslint": "~4.1.5",
     "chai": "~3.4.0",
     "chai-as-promised": "~5.1.0",
     "co-sleep": "0.0.1",
-    "eslint": "~1.9.0",
-    "eslint-config-airbnb": "~1.0.0",
-    "eslint-plugin-react": "~3.9.0",
+    "eslint": "^3.2.2",
+    "eslint-config-airbnb": "^10.0.0",
+    "eslint-plugin-import": "^1.16.0",
+    "eslint-plugin-jsx-a11y": "^2.2.3",
+    "eslint-plugin-react": "^6.5.0",
     "istanbul": "~0.4.1",
     "jsdoc": "~3.4.0",
     "mocha": "~2.3.4",
@@ -34,13 +38,11 @@
   },
   "license": "Apache-2.0",
   "dependencies": {
+    "cta-common": "git+ssh://git@git.sami.int.thomsonreuters.com:compass/cta-common.git",
+    "cta-brick": "git+ssh://git@git.sami.int.thomsonreuters.com:compass/cta-brick.git#ci",
+    "cta-messaging": "git+ssh://git@git.sami.int.thomsonreuters.com:compass/cta-messaging.git#ci",
     "co": "~4.6.0",
     "lodash": "~4.11.0",
     "shortid": "~2.2.4"
-  },
-  "sourceDependencies": {
-    "cta-brick": "git+ssh://git@git.sami.int.thomsonreuters.com:compass/cta-brick.git",
-    "cta-messaging": "git+ssh://git@git.sami.int.thomsonreuters.com:compass/cta-messaging.git",
-    "cta-flowcontrol": "git+ssh://git@git.sami.int.thomsonreuters.com:compass/cta-flowcontrol.git"
   }
 }
