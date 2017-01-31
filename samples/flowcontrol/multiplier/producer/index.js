@@ -10,7 +10,7 @@ function generate() {
 const fn = () => {
   messaging.produce({
     queue: 'input.queue',
-    json: {
+    content: {
       id: shortid.generate(),
       nature: {
         type: 'multiplication',

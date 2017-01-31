@@ -16,10 +16,10 @@ class Broker extends Brick {
     const that = this;
     try {
       const result = context.data.payload.x * context.data.payload.y;
-      const data = {
+      const operation = {
         id: shortid.generate(),
         nature: {
-          type: 'message',
+          type: 'messages',
           quality: 'produce',
         },
         payload: {
@@ -30,7 +30,7 @@ class Broker extends Brick {
           },
         },
       };
-      that.cementHelper.createContext(data).publish();
+      that.cementHelper.createContext(operation).publish();
       context.emit('done', that.name, result);
     } catch (err) {
       context.emit('reject', that.name, err);

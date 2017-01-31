@@ -1,5 +1,9 @@
 'use strict';
 
+const path = require('path');
+const os = require('os');
+const siloFilename = path.join(os.tmpDir(), 'sample.db');
+
 module.exports = {
   name: 'io sample',
   tools: [{
@@ -24,7 +28,7 @@ module.exports = {
   }],
   bricks: [{
     name: 'producer',
-    module: '../../cta-io/samples/flowcontrol/silo/producer.js',
+    module: './producer.js',
     properties: {},
     publish: [{
       topic: 'produce.com',
@@ -49,12 +53,12 @@ module.exports = {
       topic: 'documents.com',
       data: [{
         nature: {
-          type: 'document',
+          type: 'documents',
           quality: 'backup',
         },
       }, {
         nature: {
-          type: 'document',
+          type: 'documents',
           quality: 'restore',
         },
       }],
@@ -63,23 +67,23 @@ module.exports = {
     name: 'silo',
     module: 'cta-silo',
     properties: {
-      filename: require('os').tmpDir() + require('path').sep + 'sample.db',
+      filename: siloFilename,
     },
     subscribe: [{
       topic: 'documents.com',
       data: [{
         nature: {
-          type: 'document',
+          type: 'documents',
           quality: 'backup',
         },
       }, {
         nature: {
-          type: 'document',
+          type: 'documents',
           quality: 'restore',
         },
       }, {
         nature: {
-          type: 'document',
+          type: 'documents',
           quality: 'clear',
         },
       }],

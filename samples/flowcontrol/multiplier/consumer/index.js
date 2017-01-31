@@ -7,6 +7,7 @@ function cb(json) {
 messaging.consume({
   queue: 'output.queue',
   cb: cb,
+  ack: 'auto',
 }).then(function(response) {
   console.log('response: ', response);
 }, function(err) {
