@@ -36,7 +36,7 @@
   "dependencies": {
     "cta-common": "git+ssh://git@git.sami.int.thomsonreuters.com:compass/cta-common.git",
     "cta-brick": "git+ssh://git@git.sami.int.thomsonreuters.com:compass/cta-brick.git",
-    "cta-messaging": "git+ssh://git@git.sami.int.thomsonreuters.com:compass/cta-messaging.git#ci",
+    "cta-messaging": "git+ssh://git@git.sami.int.thomsonreuters.com:compass/cta-messaging.git",
     "co": "~4.6.0",
     "lodash": "~4.11.0",
     "shortid": "~2.2.4"
