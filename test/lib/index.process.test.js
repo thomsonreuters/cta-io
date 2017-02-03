@@ -7,9 +7,9 @@ const cementHelper = {
   constructor: {
     name: 'CementHelper',
   },
-  createContext: function() {
+  createContext: function () {
     return {
-      publish: function() {
+      publish: function () {
       },
     };
   },
@@ -19,9 +19,9 @@ const brick = new o.Lib(cementHelper, {
   properties: {},
 });
 
-describe('process', function() {
-  it('should reject incorrect nature.type', function(done) {
-    const _ack = o.sinon.stub(brick, '_ack', function() {
+describe('process', function () {
+  it('should allow any nature.type', function (done) {
+    const _ack = o.sinon.stub(brick, '_ack', function () {
       return Promise.resolve();
     });
     o.co(function* coroutine() {
@@ -36,18 +36,17 @@ describe('process', function() {
         },
       };
       yield brick.process(context);
-      done('should not be here');
-    })
-    .catch((err) => {
-      o.assert(err);
-      o.sinon.assert.notCalled(_ack);
       _ack.restore();
       done();
+    })
+    .catch((err) => {
+      _ack.restore();
+      done(err);
     });
   });
 
-  it('should reject incorrect nature.quality', function(done) {
-    const _ack = o.sinon.stub(brick, '_ack', function() {
+  it('should reject incorrect nature.quality', function (done) {
+    const _ack = o.sinon.stub(brick, '_ack', function () {
       return Promise.resolve();
     });
     o.co(function* coroutine() {
@@ -62,6 +61,7 @@ describe('process', function() {
         },
       };
       yield brick.process(context);
+      _ack.restore();
       done('should not be here');
     })
     .catch((err) => {
@@ -72,8 +72,8 @@ describe('process', function() {
     });
   });
 
-  it('should reject when error occurred', function(done) {
-    const _ack = o.sinon.stub(brick, '_ack', function() {
+  it('should reject when error occurred', function (done) {
+    const _ack = o.sinon.stub(brick, '_ack', function () {
       return Promise.reject('mock error');
     });
     const context = new Context();
@@ -88,6 +88,7 @@ describe('process', function() {
     };
     brick.process(context)
       .then(() => {
+        _ack.restore();
         done('should not be here');
       }, (err) => {
         o.assert(err);
@@ -97,11 +98,11 @@ describe('process', function() {
       });
   });
 
-  it('should process with ack', function(done) {
+  it('should process with ack', function (done) {
+    const _ack = o.sinon.stub(brick.messaging, 'ack', function () {
+      return Promise.resolve();
+    });
     o.co(function* coroutine() {
-      const _ack = o.sinon.stub(brick.messaging, 'ack', function() {
-        return Promise.resolve();
-      });
       const context = new Context();
       context.data = {
         nature: {
@@ -118,13 +119,14 @@ describe('process', function() {
       done();
     })
     .catch((err) => {
+      _ack.restore();
       done(err);
     });
   });
 
-  it('should process with get', function(done) {
+  it('should process with get', function (done) {
     o.co(function* coroutine() {
-      const _get = o.sinon.stub(brick.messaging, 'get', function() {
+      const _get = o.sinon.stub(brick.messaging, 'get', function () {
         return Promise.resolve({
           result: {
             content: {
@@ -153,9 +155,9 @@ describe('process', function() {
     });
   });
 
-  it('should process with subscribe', function(done) {
+  it('should process with subscribe', function (done) {
     o.co(function* coroutine() {
-      const stub = o.sinon.stub(brick.messaging, 'subscribe', function() {
+      const stub = o.sinon.stub(brick.messaging, 'subscribe', function () {
         return Promise.resolve({
           result: {},
         });
@@ -163,7 +165,8 @@ describe('process', function() {
       const context = new Context();
       const payload = {
         topic: o.shortid.generate(),
-        cb: () => {},
+        cb: () => {
+        },
       };
       context.data = {
         nature: {
@@ -182,9 +185,9 @@ describe('process', function() {
     });
   });
 
-  it('should process with consume', function(done) {
+  it('should process with consume', function (done) {
     o.co(function* coroutine() {
-      const stub = o.sinon.stub(brick.messaging, 'consume', function() {
+      const stub = o.sinon.stub(brick.messaging, 'consume', function () {
         return Promise.resolve({
           result: {},
         });
@@ -192,7 +195,8 @@ describe('process', function() {
       const context = new Context();
       const payload = {
         queue: o.shortid.generate(),
-        cb: () => {},
+        cb: () => {
+        },
       };
       context.data = {
         nature: {
@@ -211,7 +215,7 @@ describe('process', function() {
     });
   });
 
-  it('should process with publish on default topic', function(done) {
+  it('should process with publish on default topic', function (done) {
     o.co(function* coroutine() {
       const topic = o.shortid.generate();
       const b = new o.Lib(cementHelper, {
@@ -222,7 +226,7 @@ describe('process', function() {
           },
         },
       });
-      const stub = o.sinon.stub(b.messaging, 'publish', function() {
+      const stub = o.sinon.stub(b.messaging, 'publish', function () {
         return Promise.resolve({
           result: {},
         });
@@ -252,14 +256,14 @@ describe('process', function() {
     });
   });
 
-  it('should process with publish on custom topic', function(done) {
+  it('should process with publish on custom topic', function (done) {
     const topic = o.shortid.generate();
     o.co(function* coroutine() {
       const b = new o.Lib(cementHelper, {
         name: 'cta-io',
         properties: {},
       });
-      const stub = o.sinon.stub(b.messaging, 'publish', function() {
+      const stub = o.sinon.stub(b.messaging, 'publish', function () {
         return Promise.resolve({
           result: {},
         });
@@ -302,7 +306,7 @@ describe('process', function() {
           },
         },
       });
-      const _produce = o.sinon.stub(brick.messaging, 'produce', function() {
+      const _produce = o.sinon.stub(brick.messaging, 'produce', function () {
         return Promise.resolve({
           result: {},
         });
@@ -338,7 +342,7 @@ describe('process', function() {
         name: 'cta-io',
         properties: {},
       });
-      const _produce = o.sinon.stub(brick.messaging, 'produce', function() {
+      const _produce = o.sinon.stub(brick.messaging, 'produce', function () {
         return Promise.resolve({
           result: {},
         });
