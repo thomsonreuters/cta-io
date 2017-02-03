@@ -24,15 +24,15 @@ Note that this brick can be used as a Receiver (Input) and/or a Sender (Output)
 # Brick contracts
 
 | nature.type | nature.quality | payload sample | description
-| --- | --- | ---
-| message | produce | {a: 1} | produce message {id: 1} on default output queue
-| message | produce | {queue: 'foo', message: {id: 1}} | produce message {a: 1} on dynamic queue 'foo'
+| --- | --- | --- | ---
+| message | produce | {id: 1, command: 'ls'} | produce message {id: 1, command: 'ls'} on default output queue
+| message | produce | {queue: 'foo', message: {id: 1}} | produce message on custom queue 'foo'
 | message | consume | {queue: 'foo', prefetch: 1} |
-| message | get | {queue: 'foo'}
-| message | publish | {id: 2} | publish message {id: 2} on default output topic
-| message | publish | {topic: 'bar', message: {id: 2}} | publish message {id: 2} on dynamic topic 'bar'
-| message | subscribe | {topic: 'bar'} |
-| message | acknowledge | {id: 1} |
+| message | get | {queue: 'foo'} |
+| message | publish | {status: 'ok'} | publish message {status: 'ok'} on default exchange and default output topic
+| message | publish | {exchange: 'some_exchange', topic: 'some_topic', message: {status: 'ok'}} | publish message {status: 'ok'} on custom exchange 'some_exchange' and custom topic 'some_topic'
+| message | subscribe | {topic: 'some_topic'} | Subscribe to messages on topic some_topic
+| message | acknowledge | {id: 'some_id'} | Acknowledge consumed message with id 'some_id'
 
 # Configuration sample
 
