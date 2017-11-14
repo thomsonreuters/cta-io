@@ -18,7 +18,7 @@ We aim to give you brief guidelines here.
 
 ### 1. Usage
 
-**cta-io** extends **Brick** (_cta-brick_). In order to use it, we need to provide a **configuration**. **cta-io** depends on **cta-messaging** which provides _messaging as a tool_.
+**cta-io** extends **Brick** (_cta-brick_). In order to use it, we need to provide a **configuration**. The **cta-io** depends on **cta-messaging** which provides _messaging as a tool_.
 
 ```javascript
 // a full sample code:
