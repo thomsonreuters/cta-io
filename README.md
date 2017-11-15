@@ -1,47 +1,30 @@
-CTA-IO
-========
+# cta-io [ ![build status](https://git.sami.int.thomsonreuters.com/compass/cta-io/badges/master/build.svg)](https://git.sami.int.thomsonreuters.com/compass/cta-io/commits/master) [![coverage report](https://git.sami.int.thomsonreuters.com/compass/cta-io/badges/master/coverage.svg)](https://git.sami.int.thomsonreuters.com/compass/cta-io/commits/master)
 
-This is the Input/Output Brick for cta project
+I/O Modules for Compass Test Automation, One of Libraries in CTA-OSS Framework
 
-First refer to cta-brick and cta-flowcontrol repositories to familiarize yourself with those concepts.
+## General Overview
 
-Like all bricks, IO Brick can be easily injected into a flowcontrol using a configuration
+### Overview
 
-# Brick dependencies
+This **I/O** (Input / Output) Module _provides communications_ between **CTA-OSS Framework** and **outsides services** via **messaging**.
 
-This brick depends on cta-messaging tool to read & write to/from the outside.
- 
-If it's not specified, it will use the default one. Refer to cta-messaging doc.
+## Guidelines
 
-# Brick properties
+We aim to give you brief guidelines here.
 
-* input.queue & input.topic: this is the name of the default queue/topic where to consume from as soon as the application is started.
-  Received messages are then automatically published in the channel according to the publish configuration of the brick
-* output.queue & output.topic: this is the name of the default queue/topic where to write to
+1. [Usage](#1-usage)
+1. [Input / Output](#2-input-output)
+1. [Contracts](#3-contracts)
 
-Note that this brick can be used as a Receiver (Input) and/or a Sender (Output)
+### 1. Usage
 
-# Brick contracts
+**cta-io** extends **Brick** (_cta-brick_). In order to use it, we need to provide a **configuration**. The **cta-io** depends on **cta-messaging** which provides _messaging as a tool_.
 
-| nature.type | nature.quality | payload sample | description
-| --- | --- | --- | ---
-| message | produce | {id: 1, command: 'ls'} | produce message {id: 1, command: 'ls'} on default output queue
-| message | produce | {queue: 'foo', message: {id: 1}} | produce message on custom queue 'foo'
-| message | consume | {queue: 'foo', prefetch: 1} |
-| message | get | {queue: 'foo'} |
-| message | publish | {status: 'ok'} | publish message {status: 'ok'} on default exchange and default output topic
-| message | publish | {exchange: 'some_exchange', topic: 'some_topic', message: {status: 'ok'}} | publish message {status: 'ok'} on custom exchange 'some_exchange' and custom topic 'some_topic'
-| message | subscribe | {topic: 'some_topic'} | Subscribe to messages on topic some_topic
-| message | acknowledge | {id: 'some_id'} | Acknowledge consumed message with id 'some_id'
-
-# Configuration sample
-
-````javascript
-'use strict';
-
-module.exports = {
+```javascript
+// a full sample code:
+const config = {
   tools: [{
-    name: 'messaging',
+    name: 'sample.messaging',
     module: 'cta-messaging',
     properties: {
       provider: 'rabbitmq',
@@ -54,7 +37,7 @@ module.exports = {
     name: 'Receiver',
     module: 'cta-io',
     dependencies: {
-      messaging: 'messaging',
+      messaging: 'sample.messaging',
     },
     properties: {
       input: {
@@ -62,23 +45,196 @@ module.exports = {
       },
     },
     publish: [{
-      topic: 'topics.com',
+      topic: 'sample.topics',
       data: [{}],
     }],
   }, {
     name: 'Sender',
     module: 'cta-io',
     dependencies: {
-      messaging: 'messaging',
+      messaging: 'sample.messaging',
     },
     properties: {},
     subscribe: [{
-      topic: 'topics.com',
+      topic: 'sample.topics',
       data: [{}],
     }],
   }],
 };
-````
+```
 
-See a full working sample in /samples/flowcontrol/
+#### Declaring cta-messaging as cta-io's dependencies
 
+```javascript
+const config = {
+  tools: [{
+    name: 'sample.messaging',
+    module: 'cta-messaging',
+    properties: {
+      provider: 'rabbitmq',
+      parameters: {
+        url: 'amqp://localhost?heartbeat=60',
+      },
+    },
+  }],
+  ...
+};
+```
+
+It declares a tool _named_ **"sample.messaging"** using **cta-messaging** module with _specified properties_.
+
+#### Declaring Bricks as cta-io
+
+```javascript
+const config = {
+  ...
+  bricks: [{
+    name: 'Receiver',
+    module: 'cta-io',
+    dependencies: {
+      messaging: 'sample.messaging',
+    },
+    properties: {
+      input: {
+        queue: 'input.queue',
+      },
+    },
+    publish: [{
+      topic: 'sample.topics',
+      data: [{}],
+    }],
+  }, {
+    name: 'Sender',
+    module: 'cta-io',
+    dependencies: {
+      messaging: 'sample.messaging',
+    },
+    properties: {},
+    subscribe: [{
+      topic: 'sample.topics',
+      data: [{}],
+    }],
+  }],
+};
+```
+
+It declares _two_ **bricks** named **"Receiver"** and **"Sender"** using **cta-io** module with **dependencies.messaging** named **"sample.messaging"**.
+
+* **"Receiver"** Brick using **cta-io** module
+
+```javascript
+const config = {
+  ...
+  bricks: [{
+    name: 'Receiver',
+    module: 'cta-io',
+    dependencies: {
+      messaging: 'sample.messaging',
+    },
+    properties: {
+      input: {
+        queue: 'input.queue',
+      },
+    },
+    publish: [{
+      topic: 'sample.topics',
+      data: [{}],
+    }],
+  },
+  ...
+  ],
+};
+```
+
+This **"Receiver"** Brick _subscribes_ **"input.queue"** queue via **"sample.messaging"** and _publish_ a content on **"sample.topics"** topic.
+
+* **"Sender"** Brick using **cta-io** module
+
+```javascript
+const config = {
+  ...
+  bricks: [
+  ...
+  {
+    name: 'Sender',
+    module: 'cta-io',
+    dependencies: {
+      messaging: 'sample.messaging',
+    },
+    properties: {},
+    subscribe: [{
+      topic: 'sample.topics',
+      data: [{}],
+    }],
+  }],
+};
+```
+
+This **"Sender"** Brick _subscribes_ **"sample.topics"** topic and _processes_ a content according to the **_received_ payload** via **"sample.messaging"**.
+
+[back to top](#guidelines)
+
+### 2. Input / Output
+
+In **configuration**, **cta-io** uses **properties** _to manipulate_ the content as **input** / **output**.
+
+* **properties.input**
+
+```javascript
+const config = {
+  ...
+  bricks: [{
+    ...
+    properties: {
+      input: {
+        queue: 'input.queue',
+        topic: 'input.topic',
+      },
+    },
+    ...
+  }],
+};
+```
+
+The **properties.input** has _two_ fields, **queue** and **topic**. They define the **name** of **queue**/**topic** which any content will _be consumed from_ as the **input**.
+
+* **properties.output**
+
+```javascript
+const config = {
+  ...
+  bricks: [{
+    ...
+    properties: {
+      output: {
+        queue: 'output.queue',
+        topic: 'output.topic',
+      },
+    },
+    ...
+  }],
+};
+```
+
+The **properties.output** has _two_ fields, **queue** and **topic**. They define the **name** of **queue**/**topic** which any content will _be published to_ as the **output**.
+
+[back to top](#guidelines)
+
+### 3. Contracts
+
+| nature.type | nature.quality | payload | description
+| --- | --- | --- | ---
+| message | produce | { status: 'ok' } | produce message { status: 'ok' } on **default** output queue
+| message | produce | { queue: 'sample', message: { status: 'ok' }} | produce _message_ on **custom** queue: 'sample'
+| message | consume | { status: 'ok' } |
+| message | get | { status: 'ok' } |
+| message | publish | { status: 'ok' } | publish message { status: 'ok' } on **default** exchange and **default** output topic
+| message | publish | { exchange: 'sample.exchange', topic: 'sample.topic', message: { status: 'ok' }} | publish message { status: 'ok' } on **custom** exchange 'sample.exchange' and **custom** topic 'sample.topic'
+| message | subscribe | { topic: 'sample.topic' } | subscribe to messages on **custom** topic 'sample.topic'
+| message | acknowledge | { id: '123' } | acknowledge consumed message with id '123'
+
+[back to top](#guidelines)
+
+------
+
+## To Do
