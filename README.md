@@ -1,4 +1,6 @@
-# cta-io [ ![build status](https://git.sami.int.thomsonreuters.com/compass/cta-io/badges/master/build.svg)](https://git.sami.int.thomsonreuters.com/compass/cta-io/commits/master) [![coverage report](https://git.sami.int.thomsonreuters.com/compass/cta-io/badges/master/coverage.svg)](https://git.sami.int.thomsonreuters.com/compass/cta-io/commits/master)
+# cta-io
+[![Build Status](https://travis-ci.org/thomsonreuters/cta-io.svg?branch=master)](https://travis-ci.org/thomsonreuters/cta-io)
+[![Coverage Status](https://coveralls.io/repos/github/thomsonreuters/cta-io/badge.svg?branch=master)](https://coveralls.io/github/thomsonreuters/cta-io?branch=master)
 
 I/O Modules for Compass Test Automation, One of Libraries in CTA-OSS Framework
 

@@ -7,6 +7,7 @@
   "scripts": {
     "test": "NODE_PATH=. _mocha",
     "codecoverage": "istanbul cover node_modules/mocha/bin/_mocha -- -R spec",
+    "coveralls": "istanbul cover ./node_modules/mocha/bin/_mocha --report lcovonly -- -R spec && cat ./coverage/lcov.info | ./node_modules/coveralls/bin/coveralls.js && rm -rf ./coverage",
     "lint": "eslint --quiet lib test",
     "docs": "jsdoc --readme README.md lib -r -d docs && opener ./docs/index.html"
   },
@@ -38,6 +39,7 @@
     "cta-brick": "git+ssh://git@github.com:thomsonreuters/cta-brick.git#1.0.0",
     "cta-messaging": "git+ssh://git@github.com:thomsonreuters/cta-messaging.git#1.0.0",
     "co": "~4.6.0",
+    "coveralls": "^3.0.0",
     "lodash": "~4.11.0",
     "shortid": "~2.2.4"
   }
