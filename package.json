@@ -23,6 +23,7 @@
     "chai": "~3.4.0",
     "chai-as-promised": "~5.1.0",
     "co-sleep": "0.0.1",
+    "coveralls": "^3.0.0",
     "eslint": "^3.2.2",
     "istanbul": "~0.4.1",
     "jsdoc": "~3.4.0",
@@ -39,7 +40,6 @@
     "cta-brick": "git+ssh://git@github.com:thomsonreuters/cta-brick.git#1.0.0",
     "cta-messaging": "git+ssh://git@github.com:thomsonreuters/cta-messaging.git#1.0.0",
     "co": "~4.6.0",
-    "coveralls": "^3.0.0",
     "lodash": "~4.11.0",
     "shortid": "~2.2.4"
   }
