@@ -7,22 +7,25 @@
   "scripts": {
     "test": "NODE_PATH=. _mocha",
     "codecoverage": "istanbul cover node_modules/mocha/bin/_mocha -- -R spec",
+    "coveralls": "istanbul cover ./node_modules/mocha/bin/_mocha --report lcovonly -- -R spec && cat ./coverage/lcov.info | ./node_modules/coveralls/bin/coveralls.js && codecov",
     "lint": "eslint --quiet lib test",
     "docs": "jsdoc --readme README.md lib -r -d docs && opener ./docs/index.html"
   },
   "repository": {
     "type": "git",
-    "url": "git@git.sami.int.thomsonreuters.com:compass/cta-io.git"
+    "url": "https://github.com/thomsonreuters/cta-io.git"
   },
   "engines": {
-    "node": "6.9.4"
+    "node": ">=6"
   },
   "devDependencies": {
     "chai": "~3.4.0",
     "chai-as-promised": "~5.1.0",
     "co-sleep": "0.0.1",
+    "codecov": "^3.0.0",
+    "coveralls": "^3.0.0",
     "eslint": "^3.2.2",
-    "eslint-config-cta": "git+ssh://git@git.sami.int.thomsonreuters.com:compass/eslint-config-cta.git",
+    "eslint-config-cta": "^1.0.1",
     "istanbul": "~0.4.1",
     "jsdoc": "~3.4.0",
     "mocha": "~2.3.4",
@@ -33,10 +36,10 @@
   },
   "license": "Apache-2.0",
   "dependencies": {
-    "cta-flowcontrol": "git+ssh://git@git.sami.int.thomsonreuters.com:compass/cta-flowcontrol.git#1.0.0",
-    "cta-common": "git+ssh://git@git.sami.int.thomsonreuters.com:compass/cta-common.git#1.0.0",
-    "cta-brick": "git+ssh://git@git.sami.int.thomsonreuters.com:compass/cta-brick.git#1.0.0",
-    "cta-messaging": "git+ssh://git@git.sami.int.thomsonreuters.com:compass/cta-messaging.git#1.0.0",
+    "cta-flowcontrol": "thomsonreuters/cta-flowcontrol#1.0.0",
+    "cta-common": "thomsonreuters/cta-common#1.0.0",
+    "cta-brick": "thomsonreuters/cta-brick#1.0.0",
+    "cta-messaging": "thomsonreuters/cta-messaging#1.0.0",
     "co": "~4.6.0",
     "lodash": "~4.11.0",
     "shortid": "~2.2.4"
